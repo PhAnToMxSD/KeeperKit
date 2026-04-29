@@ -3,7 +3,6 @@
  *
  * Provides the simplified, flat method signatures required by the KeeperKit SDK brief
  * while internally delegating to the namespaced modules.
- *
  * @example
  * ```ts
  * import { KeeperKit } from "keeperkit";
