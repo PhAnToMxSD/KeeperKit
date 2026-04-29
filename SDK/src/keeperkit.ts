@@ -170,7 +170,7 @@ export class KeeperKit {
   /**
    * Trigger a manual workflow execution.
    */
-  async executeWorkflow(id: string): Promise<{ executionId: string }> {
+  async executeWorkflow(id: string): Promise<{ executionId: string; runId?: string; status?: string }> {
     return this.workflows.execute(id);
   }
 

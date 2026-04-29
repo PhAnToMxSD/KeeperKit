@@ -115,10 +115,10 @@ export class WorkflowsModule {
   async execute(
     workflowId: string,
     input?: Record<string, unknown>,
-  ): Promise<{ executionId: string }> {
-    return this.http.request<{ executionId: string }>({
+  ): Promise<{ executionId: string; runId?: string; status?: string }> {
+    return this.http.request<{ executionId: string; runId?: string; status?: string }>({
       method: "POST",
-      path: `/workflows/${workflowId}/execute`,
+      path: `/workflow/${workflowId}/execute`,
       body: input ?? {},
     });
   }

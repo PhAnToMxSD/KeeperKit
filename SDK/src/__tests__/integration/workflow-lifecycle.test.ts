@@ -188,7 +188,7 @@ describe("Workflow lifecycle (mocked API)", () => {
       (call: unknown[]) => new URL(call[0] as string).pathname,
     );
     expect(urls[0]).toBe("/api/workflows/create");                    // POST create
-    expect(urls[1]).toBe("/api/workflows/wf_lifecycle_1/execute");      // POST execute
+    expect(urls[1]).toBe("/api/workflow/wf_lifecycle_1/execute");      // POST execute
     expect(urls[2]).toBe("/api/workflows/executions/exec_lifecycle_1/status"); // GET status (poll 1)
     expect(urls[3]).toBe("/api/workflows/executions/exec_lifecycle_1/status"); // GET status (poll 2)
     expect(urls[4]).toBe("/api/workflows/executions/exec_lifecycle_1");        // GET full execution

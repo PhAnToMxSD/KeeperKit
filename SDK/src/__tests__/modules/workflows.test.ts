@@ -168,15 +168,17 @@ describe("WorkflowsModule", () => {
   });
 
   describe("execute", () => {
-    it("calls POST /workflows/:id/execute and returns executionId", async () => {
-      mockRequest.mockResolvedValueOnce({ executionId: "exec_1" });
+    it("calls POST /workflow/:id/execute and returns executionId", async () => {
+      mockRequest.mockResolvedValueOnce({ executionId: "exec_1", runId: "run_1", status: "running" });
       const result = await mod.execute("wf_1", { key: "value" });
 
       const opts = mockRequest.mock.calls[0]![0];
       expect(opts.method).toBe("POST");
-      expect(opts.path).toBe("/workflows/wf_1/execute");
+      expect(opts.path).toBe("/workflow/wf_1/execute");
       expect(opts.body).toEqual({ key: "value" });
       expect(result.executionId).toBe("exec_1");
+      expect(result.runId).toBe("run_1");
+      expect(result.status).toBe("running");
     });
 
     it("sends empty object when no input provided", async () => {
