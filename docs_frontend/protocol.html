@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Protocol - KeeperKit SDK Docs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">KK</div>
+        <div>
+          <span class="brand-name">KeeperKit</span>
+          <span class="brand-subtitle">SDK Documentation</span>
+        </div>
+      </div>
+
+      <p class="sidebar-kicker">Protocol</p>
+
+      <nav class="sidebar-nav">
+        <a data-nav-link href="index.html">Overview</a>
+        <a data-nav-link href="protocol.html">Protocol</a>
+        <a data-nav-link href="getting-started.html">Getting Started</a>
+        <a data-nav-link href="sdk.html">SDK Surface</a>
+        <a data-nav-link href="workflows.html">Workflows</a>
+        <a data-nav-link href="executions.html">Executions</a>
+        <a data-nav-link href="direct-execute.html">Direct Execute</a>
+        <a data-nav-link href="ecosystem.html">Ecosystem</a>
+        <a data-nav-link href="troubleshooting.html">Troubleshooting</a>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Protocol map</strong>
+        <p>This page explains how an application uses KeeperKit to resolve workflows, start executions, and read back status and logs.</p>
+      </div>
+
+      <div class="sidebar-foot">
+        <div class="mini-kicker">Quick link</div>
+        <p class="meta">If you only need the install steps, jump to Getting Started first.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <nav class="topbar-links" aria-label="Primary">
+          <a href="index.html">Docs</a>
+          <a href="protocol.html">Protocol</a>
+          <a href="sdk.html">SDK</a>
+          <a href="workflows.html">Workflows</a>
+          <a href="executions.html">Executions</a>
+        </nav>
+
+        <div class="search-wrap">
+          <input class="search-input" type="search" data-doc-search placeholder="Search protocol..." aria-label="Search protocol" />
+        </div>
+
+        <a class="topbar-cta" href="getting-started.html">Get Started</a>
+      </header>
+
+      <div class="page">
+        <section class="hero" data-searchable>
+          <div class="hero-copy">
+            <div class="badge">Protocol flow</div>
+            <h1 class="title">How requests become <span class="accent">executions</span>.</h1>
+            <p class="lead">KeeperKit is the protocol boundary. A host application resolves a workflow, ensures it is ready to run, executes it through the SDK, and then polls execution status and logs until the run completes or fails.</p>
+
+            <div class="actions">
+              <a class="button primary" href="executions.html">Read Execution Flow</a>
+              <a class="button secondary" href="workflows.html">Read Workflow API</a>
+            </div>
+          </div>
+
+          <aside class="panel terminal">
+            <div class="terminal-bar">
+              <span></span><span></span><span></span>
+              <div class="terminal-label">protocol loop</div>
+            </div>
+            <pre><code>intent -> workflow lookup -> enable if needed
+       -> execute workflow -> return executionId
+       -> poll status and logs -> terminal state</code></pre>
+          </aside>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Lifecycle</h2>
+              <p class="subtitle">The SDK README describes a consistent four-step loop. This site keeps that logic visible so developers can implement reliable integrations.</p>
+            </div>
+          </div>
+
+          <div class="flow">
+            <div class="flow-item">
+              <div class="flow-step">1</div>
+              <div>
+                <h3>Discover the workflow</h3>
+                <p>Use <code>listWorkflows()</code> or the namespaced <code>workflows.list()</code> method and narrow by project, tag, or pagination.</p>
+              </div>
+            </div>
+            <div class="flow-item">
+              <div class="flow-step">2</div>
+              <div>
+                <h3>Prepare the target</h3>
+                <p>Read the workflow, confirm it is enabled, and enable it if the host app needs to run it immediately.</p>
+              </div>
+            </div>
+            <div class="flow-item">
+              <div class="flow-step">3</div>
+              <div>
+                <h3>Execute the workflow</h3>
+                <p>The execute call returns an <code>executionId</code> quickly, so callers can keep their UI responsive.</p>
+              </div>
+            </div>
+            <div class="flow-item">
+              <div class="flow-step">4</div>
+              <div>
+                <h3>Observe progress</h3>
+                <p>Poll status and logs with execution helpers until the run reaches <code>success</code>, <code>error</code>, or <code>cancelled</code>.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section grid-2" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Why the SDK exists</div>
+            <h3>Typed, ergonomic access</h3>
+            <p>Developers should not need to write raw HTTP requests or manually map responses. The SDK wraps the KeeperHub API with typed helpers and documented defaults.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">What the SDK does</div>
+            <h3>Normalizes transport behavior</h3>
+            <p>The client manages auth headers, request timeouts, safe retries, and typed error classes so application code can focus on workflow logic.</p>
+          </article>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Suggested implementation pattern</h2>
+              <p class="subtitle">This is the basic pattern used throughout the README: resolve, enable if necessary, execute, and then wait for completion.</p>
+            </div>
+          </div>
+
+          <div class="code-shell">
+            <button class="copy-btn" type="button" data-copy>Copy</button>
+            <pre><code>import { KeeperKit } from "keeperkit";
+
+const client = new KeeperKit({ apiKey: process.env.KEEPERHUB_API_KEY });
+
+const workflows = await client.listWorkflows({ page: 1, limit: 20 });
+const target = workflows.find((workflow) => workflow.name.includes("Savings Vault"));
+
+if (!target?.enabled) {
+  await client.enableWorkflow(target.id);
+}
+
+const execution = await client.executeWorkflow(target.id);
+const result = await client.waitForExecution(target.id, execution.executionId, {
+  timeoutMs: 60000,
+  pollIntervalMs: 2000,
+});</code></pre>
+          </div>
+        </section>
+
+        <section class="section grid-3" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Modules</div>
+            <h3>Workflows and executions</h3>
+            <p>The protocol page maps directly to <code>workflows</code> and <code>executions</code> modules, which are the core runtime primitives.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Extensions</div>
+            <h3>Chains and integrations</h3>
+            <p>Protocols often depend on chain metadata and integration records. The SDK includes modules for both and keeps them typed.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Discovery</div>
+            <h3>Marketplace and schema endpoints</h3>
+            <p>Listed workflows and MCP schema discovery let apps build richer UIs and call public workflows with the correct payment flow.</p>
+          </article>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="callout warning">
+            <p>When the backend accepts an execution but the status record is not indexed yet, callers should treat early 404s as temporary and retry for a short window instead of failing immediately.</p>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <div class="footer-grid">
+            <div>
+              <strong>Protocol guide</strong>
+              <div class="meta">The remaining pages unpack each module and helper surface in more detail.</div>
+            </div>
+            <div class="footer-links">
+              <a href="workflows.html">Workflows</a>
+              <a href="executions.html">Executions</a>
+              <a href="sdk.html">SDK Surface</a>
+              <a href="troubleshooting.html">Troubleshooting</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

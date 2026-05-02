@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Troubleshooting - KeeperKit SDK Docs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">KK</div>
+        <div>
+          <span class="brand-name">KeeperKit</span>
+          <span class="brand-subtitle">SDK Documentation</span>
+        </div>
+      </div>
+
+      <p class="sidebar-kicker">Troubleshooting</p>
+
+      <nav class="sidebar-nav">
+        <a data-nav-link href="index.html">Overview</a>
+        <a data-nav-link href="protocol.html">Protocol</a>
+        <a data-nav-link href="getting-started.html">Getting Started</a>
+        <a data-nav-link href="sdk.html">SDK Surface</a>
+        <a data-nav-link href="workflows.html">Workflows</a>
+        <a data-nav-link href="executions.html">Executions</a>
+        <a data-nav-link href="direct-execute.html">Direct Execute</a>
+        <a data-nav-link href="ecosystem.html">Ecosystem</a>
+        <a data-nav-link href="troubleshooting.html">Troubleshooting</a>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Common issues</strong>
+        <p>Most problems fall into auth, polling, build, or rate-limit categories. The SDK surfaces each one through typed errors and explicit retry behavior.</p>
+      </div>
+
+      <div class="sidebar-foot">
+        <div class="mini-kicker">Developer commands</div>
+        <p class="meta">Use <code>pnpm test</code>, <code>pnpm type-check</code>, and <code>pnpm build</code> from <code>SDK/</code> when validating changes.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <nav class="topbar-links" aria-label="Primary">
+          <a href="index.html">Docs</a>
+          <a href="protocol.html">Protocol</a>
+          <a href="sdk.html">SDK</a>
+          <a href="ecosystem.html">Ecosystem</a>
+          <a href="troubleshooting.html">Troubleshooting</a>
+        </nav>
+
+        <div class="search-wrap">
+          <input class="search-input" type="search" data-doc-search placeholder="Search troubleshooting..." aria-label="Search troubleshooting" />
+        </div>
+
+        <a class="topbar-cta" href="getting-started.html">Install</a>
+      </header>
+
+      <div class="page">
+        <section class="hero" data-searchable>
+          <div class="hero-copy">
+            <div class="badge">Troubleshooting</div>
+            <h1 class="title">Errors, retries, and <span class="accent">setup</span>.</h1>
+            <p class="lead">This page collects the common places where integrations fail: invalid credentials, temporary 404s during execution polling, timeout behavior, rate limits, and build-time issues.</p>
+
+            <div class="actions">
+              <a class="button primary" href="getting-started.html">Back to Setup</a>
+              <a class="button secondary" href="sdk.html">See SDK Surface</a>
+            </div>
+          </div>
+
+          <aside class="panel terminal">
+            <div class="terminal-bar">
+              <span></span><span></span><span></span>
+              <div class="terminal-label">validation</div>
+            </div>
+            <pre><code>pnpm test
+pnpm type-check
+pnpm build
+
+If a request fails, inspect:
+status, code, message, retryable, body</code></pre>
+          </aside>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Error mapping</h2>
+              <p class="subtitle">The SDK converts HTTP responses into typed error classes so your app can branch by status category rather than parsing raw messages.</p>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Status / condition</th>
+                <th>SDK error</th>
+                <th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>400</td><td>ValidationError</td><td>The request payload failed validation</td></tr>
+              <tr><td>401 / 403</td><td>AuthError</td><td>API key or credentials are missing or invalid</td></tr>
+              <tr><td>402</td><td>PaymentRequiredError</td><td>The workflow or endpoint requires payment</td></tr>
+              <tr><td>404</td><td>NotFoundError</td><td>The resource does not exist or has not been indexed yet</td></tr>
+              <tr><td>422</td><td>SpendingCapError</td><td>Execution exceeded the spending cap</td></tr>
+              <tr><td>429</td><td>RateLimitError</td><td>Retry-after and backoff may apply</td></tr>
+              <tr><td>5xx</td><td>ServerError</td><td>The KeeperHub backend experienced a server-side failure</td></tr>
+              <tr><td>Timeout</td><td>KeeperKitError</td><td>The request timed out before a response arrived</td></tr>
+              <tr><td>Network failure</td><td>KeeperKitError</td><td>The request could not reach the server</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section grid-2" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Auth failures</div>
+            <h3>Check the key prefix</h3>
+            <p>Organization API keys must start with <code>kh_</code>. The auth provider throws early if the prefix does not match.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Execution polling</div>
+            <h3>Retry short-lived 404s</h3>
+            <p>If an execution was accepted but the status record is not indexed yet, retry for a brief period before surfacing a failure.</p>
+          </article>
+        </section>
+
+        <section class="section grid-2" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Build issues</div>
+            <h3>Rebuild the SDK dist output</h3>
+            <p>If a consumer project sees stale types or runtime code, rebuild <code>SDK/</code> so <code>dist/</code> stays in sync with the source tree.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Rate limits</div>
+            <h3>Respect retry-after headers</h3>
+            <p>The HTTP client uses exponential backoff and honors <code>Retry-After</code> when the server sends it.</p>
+          </article>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Validation commands</h2>
+              <p class="subtitle">These are the commands the SDK README already recommends for day-to-day development and verification.</p>
+            </div>
+          </div>
+
+          <div class="code-shell">
+            <button class="copy-btn" type="button" data-copy>Copy</button>
+            <pre><code>cd SDK
+pnpm install
+pnpm test
+pnpm type-check
+pnpm build</code></pre>
+          </div>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="callout warning">
+            <p>Do not treat an immediate 404 after a successful execute call as a permanent failure. KeeperHub may accept the run before the execution record is visible to the status endpoint.</p>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <div class="footer-grid">
+            <div>
+              <strong>Need more detail?</strong>
+              <div class="meta">Return to the Protocol page if you want the end-to-end flow, or jump back to the SDK Surface for the export matrix.</div>
+            </div>
+            <div class="footer-links">
+              <a href="protocol.html">Protocol</a>
+              <a href="sdk.html">SDK Surface</a>
+              <a href="getting-started.html">Getting Started</a>
+              <a href="index.html">Overview</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

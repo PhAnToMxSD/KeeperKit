@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Executions - KeeperKit SDK Docs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">KK</div>
+        <div>
+          <span class="brand-name">KeeperKit</span>
+          <span class="brand-subtitle">SDK Documentation</span>
+        </div>
+      </div>
+
+      <p class="sidebar-kicker">Executions</p>
+
+      <nav class="sidebar-nav">
+        <a data-nav-link href="index.html">Overview</a>
+        <a data-nav-link href="protocol.html">Protocol</a>
+        <a data-nav-link href="getting-started.html">Getting Started</a>
+        <a data-nav-link href="sdk.html">SDK Surface</a>
+        <a data-nav-link href="workflows.html">Workflows</a>
+        <a data-nav-link href="executions.html">Executions</a>
+        <a data-nav-link href="direct-execute.html">Direct Execute</a>
+        <a data-nav-link href="ecosystem.html">Ecosystem</a>
+        <a data-nav-link href="troubleshooting.html">Troubleshooting</a>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Observability</strong>
+        <p>Execution APIs let you inspect status, logs, cancellation, and history for a workflow run.</p>
+      </div>
+
+      <div class="sidebar-foot">
+        <div class="mini-kicker">Terminal states</div>
+        <p class="meta">KeeperKit treats <code>success</code>, <code>error</code>, and <code>cancelled</code> as terminal workflow execution states.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <nav class="topbar-links" aria-label="Primary">
+          <a href="index.html">Docs</a>
+          <a href="protocol.html">Protocol</a>
+          <a href="sdk.html">SDK</a>
+          <a href="workflows.html">Workflows</a>
+          <a href="executions.html">Executions</a>
+        </nav>
+
+        <div class="search-wrap">
+          <input class="search-input" type="search" data-doc-search placeholder="Search executions..." aria-label="Search executions" />
+        </div>
+
+        <a class="topbar-cta" href="direct-execute.html">Direct Execute</a>
+      </header>
+
+      <div class="page">
+        <section class="hero" data-searchable>
+          <div class="hero-copy">
+            <div class="badge">Execution API</div>
+            <h1 class="title">Start a run, then <span class="accent">observe</span> it.</h1>
+            <p class="lead">Once a workflow returns an execution ID, the SDK exposes helpers for checking progress, reading per-node logs, cancelling a run, and waiting until the execution reaches a terminal state.</p>
+
+            <div class="actions">
+              <a class="button primary" href="workflows.html">Back to Workflows</a>
+              <a class="button secondary" href="troubleshooting.html">Error Handling</a>
+            </div>
+          </div>
+
+          <aside class="panel terminal">
+            <div class="terminal-bar">
+              <span></span><span></span><span></span>
+              <div class="terminal-label">polling</div>
+            </div>
+            <pre><code>const execution = await client.executeWorkflow(workflowId);
+const result = await client.waitForExecution(workflowId, execution.executionId, {
+  timeoutMs: 60000,
+  pollIntervalMs: 2000,
+});</code></pre>
+          </aside>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Execution methods</h2>
+              <p class="subtitle">The namespaced executions module exposes the full lifecycle for reading status, fetching logs, and controlling history.</p>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Purpose</th>
+                <th>Typical use</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>listByWorkflow(workflowId, options)</td><td>List runs for a workflow</td><td>Show run history in a UI</td></tr>
+              <tr><td>get(executionId)</td><td>Fetch a single execution</td><td>Read the full run object</td></tr>
+              <tr><td>getStatus(executionId)</td><td>Get current progress</td><td>Poll live progress without reading the full run</td></tr>
+              <tr><td>getLogs(executionId)</td><td>Read per-node logs</td><td>Display node output and errors</td></tr>
+              <tr><td>cancel(executionId)</td><td>Stop a running execution</td><td>Manual cancellation from the UI</td></tr>
+              <tr><td>deleteHistory(workflowId)</td><td>Delete execution history</td><td>Cleanup or reset a workflow's run history</td></tr>
+              <tr><td>waitForCompletion(executionId, options)</td><td>Poll until terminal state</td><td>Hide retry logic from the caller</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section grid-2" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Logs</div>
+            <h3>Inspect node output</h3>
+            <p><code>getLogs</code> returns one log record per node, making it easy to display status, errors, and node-level timing in a technical UI.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">History</div>
+            <h3>Track the full lifecycle</h3>
+            <p><code>listByWorkflow</code> and <code>deleteHistory</code> give you control over execution history without leaving the SDK surface.</p>
+          </article>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Wait for completion</h2>
+              <p class="subtitle">The README shows a direct polling example. The SDK also wraps that pattern in <code>waitForCompletion</code> so applications can keep their code small.</p>
+            </div>
+          </div>
+
+          <div class="code-shell">
+            <button class="copy-btn" type="button" data-copy>Copy</button>
+            <pre><code>const execution = await client.executeWorkflow(workflowId);
+
+const finished = await client.waitForExecution(workflowId, execution.executionId, {
+  timeoutMs: 60000,
+  pollIntervalMs: 2000,
+});
+
+console.log(finished.status);
+console.log(finished.output);</code></pre>
+          </div>
+        </section>
+
+        <section class="section grid-2" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Status</div>
+            <h3>Poll progress separately</h3>
+            <p>Use <code>getStatus</code> when you only need the progress object and want to avoid pulling the full execution payload every time.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Terminal states</div>
+            <h3>Stop polling when complete</h3>
+            <p>The SDK treats <code>success</code>, <code>error</code>, and <code>cancelled</code> as terminal states so polling stops automatically.</p>
+          </article>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="callout">
+            <p>Execution polling should tolerate short delays in backend indexing. A 404 immediately after execution start is usually temporary and should be retried for a brief window.</p>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <div class="footer-grid">
+            <div>
+              <strong>Execution docs</strong>
+              <div class="meta">If you need one-off on-chain actions, the next page covers Direct Execute.</div>
+            </div>
+            <div class="footer-links">
+              <a href="direct-execute.html">Direct Execute</a>
+              <a href="troubleshooting.html">Troubleshooting</a>
+              <a href="protocol.html">Protocol</a>
+              <a href="workflows.html">Workflows</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

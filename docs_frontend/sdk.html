@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SDK Surface - KeeperKit SDK Docs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">KK</div>
+        <div>
+          <span class="brand-name">KeeperKit</span>
+          <span class="brand-subtitle">SDK Documentation</span>
+        </div>
+      </div>
+
+      <p class="sidebar-kicker">SDK Surface</p>
+
+      <nav class="sidebar-nav">
+        <a data-nav-link href="index.html">Overview</a>
+        <a data-nav-link href="protocol.html">Protocol</a>
+        <a data-nav-link href="getting-started.html">Getting Started</a>
+        <a data-nav-link href="sdk.html">SDK Surface</a>
+        <a data-nav-link href="workflows.html">Workflows</a>
+        <a data-nav-link href="executions.html">Executions</a>
+        <a data-nav-link href="direct-execute.html">Direct Execute</a>
+        <a data-nav-link href="ecosystem.html">Ecosystem</a>
+        <a data-nav-link href="troubleshooting.html">Troubleshooting</a>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Package entry point</strong>
+        <p><code>SDK/src/index.ts</code> re-exports the flat client, the namespaced client, helpers, models, modules, and error classes.</p>
+      </div>
+
+      <div class="sidebar-foot">
+        <div class="mini-kicker">Build target</div>
+        <p class="meta">The package builds to <code>dist/index.js</code>, <code>dist/index.mjs</code>, and <code>dist/index.d.ts</code>.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <nav class="topbar-links" aria-label="Primary">
+          <a href="index.html">Docs</a>
+          <a href="protocol.html">Protocol</a>
+          <a href="sdk.html">SDK</a>
+          <a href="workflows.html">Workflows</a>
+          <a href="ecosystem.html">Ecosystem</a>
+        </nav>
+
+        <div class="search-wrap">
+          <input class="search-input" type="search" data-doc-search placeholder="Search SDK exports..." aria-label="Search SDK exports" />
+        </div>
+
+        <a class="topbar-cta" href="getting-started.html">Install</a>
+      </header>
+
+      <div class="page">
+        <section class="hero" data-searchable>
+          <div class="hero-copy">
+            <div class="badge">API surface</div>
+            <h1 class="title">One client, two <span class="accent">styles</span>.</h1>
+            <p class="lead">KeeperKit exposes a flat client for the most common operations and a namespaced client for the full module set. Both are backed by the same HTTP transport, retry policy, auth providers, and typed error model.</p>
+
+            <div class="actions">
+              <a class="button primary" href="getting-started.html">Install the SDK</a>
+              <a class="button secondary" href="workflows.html">Read Workflows</a>
+            </div>
+          </div>
+
+          <aside class="panel terminal">
+            <div class="terminal-bar">
+              <span></span><span></span><span></span>
+              <div class="terminal-label">exports</div>
+            </div>
+            <pre><code>KeeperKit
+createKeeperHubClient
+KeeperKitHttpClient
+ApiKeyAuth
+OAuthBearerAuth
+SessionAuth
+KeeperKitError</code></pre>
+          </aside>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Package shape</h2>
+              <p class="subtitle">The main entry point is <code>SDK/src/index.ts</code>. It exports the client classes, helpers, models, module classes, and error types that developers need to build against the protocol.</p>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Exports</th>
+                <th>What to use it for</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Client</td>
+                <td>KeeperKit, createKeeperHubClient</td>
+                <td>Flat API or namespaced API access</td>
+              </tr>
+              <tr>
+                <td>Transport</td>
+                <td>KeeperKitHttpClient, HttpClientConfig</td>
+                <td>Custom transport integration or advanced control</td>
+              </tr>
+              <tr>
+                <td>Auth</td>
+                <td>ApiKeyAuth, OAuthBearerAuth, SessionAuth</td>
+                <td>Set up request headers for API key, OAuth, or cookie flows</td>
+              </tr>
+              <tr>
+                <td>Errors</td>
+                <td>KeeperKitError, AuthError, NotFoundError, RateLimitError, and more</td>
+                <td>Use precise instanceof checks for control flow</td>
+              </tr>
+              <tr>
+                <td>Helpers</td>
+                <td>createTriggerNode, createActionNode, templateRef, validateWorkflowGraph</td>
+                <td>Programmatically build and validate workflow graphs</td>
+              </tr>
+              <tr>
+                <td>Modules</td>
+                <td>WorkflowsModule, ExecutionsModule, DirectExecuteModule, and others</td>
+                <td>Advanced composition or direct access to the namespaced API</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section grid-3" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Transport</div>
+            <h3>HTTP client with retries</h3>
+            <p>The transport wraps native <code>fetch</code>, applies auth headers, serializes query params, and maps response errors to typed SDK exceptions.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Auth</div>
+            <h3>Pluggable request headers</h3>
+            <p>Use the built-in auth providers to inject <code>Authorization</code> or <code>Cookie</code> headers without wiring them manually on every call.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Retries</div>
+            <h3>Safe by default</h3>
+            <p>GET requests retry automatically, while write methods only retry if you explicitly enable <code>retryWrites</code>.</p>
+          </article>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Recommended usage</h2>
+              <p class="subtitle">Most developers should start with the flat API, then move to the namespaced modules for advanced tasks.</p>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <article class="card">
+              <div class="mini-kicker">Flat API</div>
+              <h3>Fastest path for common tasks</h3>
+              <p>Use methods like <code>listWorkflows</code>, <code>executeWorkflow</code>, <code>getExecution</code>, and <code>waitForExecution</code>.</p>
+            </article>
+
+            <article class="card">
+              <div class="mini-kicker">Namespaced API</div>
+              <h3>Best for advanced composition</h3>
+              <p>Access <code>client.workflows.duplicate</code>, <code>client.integrations.test</code>, <code>client.chains.getAbi</code>, and <code>client.mcpSchemas.get</code>.</p>
+            </article>
+          </div>
+
+          <div class="code-shell" style="margin-top:16px;">
+            <button class="copy-btn" type="button" data-copy>Copy</button>
+            <pre><code>import { KeeperKit, createKeeperHubClient } from "keeperkit";
+
+const client = new KeeperKit({ apiKey: process.env.KEEPERHUB_API_KEY });
+const full = createKeeperHubClient({ apiKey: process.env.KEEPERHUB_API_KEY });
+
+const workflows = await client.listWorkflows();
+const logs = await full.executions.getLogs("exec_123");
+const abi = await full.chains.getAbi(1, "0xContractAddress");</code></pre>
+          </div>
+        </section>
+
+        <section class="section grid-2" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Error model</div>
+            <h3>Typed exceptions</h3>
+            <p>Every failure extends <code>KeeperKitError</code>, which carries status, code, body, and retryability metadata.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Models</div>
+            <h3>Fully typed responses</h3>
+            <p>The SDK exports workflow, execution, integration, chain, payment, and schema types so consuming projects can stay strongly typed end to end.</p>
+          </article>
+        </section>
+
+        <footer class="footer">
+          <div class="footer-grid">
+            <div>
+              <strong>Next page</strong>
+              <div class="meta">Workflows explains the graph builders, validation helpers, and publish flows in detail.</div>
+            </div>
+            <div class="footer-links">
+              <a href="workflows.html">Workflows</a>
+              <a href="executions.html">Executions</a>
+              <a href="direct-execute.html">Direct Execute</a>
+              <a href="troubleshooting.html">Troubleshooting</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

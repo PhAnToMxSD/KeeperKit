@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KeeperKit SDK Docs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">KK</div>
+        <div>
+          <span class="brand-name">KeeperKit</span>
+          <span class="brand-subtitle">SDK Documentation</span>
+        </div>
+      </div>
+
+      <p class="sidebar-kicker">Overview</p>
+
+      <nav class="sidebar-nav">
+        <a data-nav-link href="index.html">Overview</a>
+        <a data-nav-link href="protocol.html">Protocol</a>
+        <a data-nav-link href="getting-started.html">Getting Started</a>
+        <a data-nav-link href="sdk.html">SDK Surface</a>
+        <a data-nav-link href="workflows.html">Workflows</a>
+        <a data-nav-link href="executions.html">Executions</a>
+        <a data-nav-link href="direct-execute.html">Direct Execute</a>
+        <a data-nav-link href="ecosystem.html">Ecosystem</a>
+        <a data-nav-link href="troubleshooting.html">Troubleshooting</a>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Static site</strong>
+        <p>This docs site is fully independent from the app runtime and focuses only on the SDK package.</p>
+      </div>
+
+      <div class="sidebar-foot">
+        <div class="mini-kicker">Support</div>
+        <p class="meta">Need setup help? Start with Getting Started, then read the Protocol page for the full flow.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <nav class="topbar-links" aria-label="Primary">
+          <a href="index.html">Docs</a>
+          <a href="protocol.html">Protocol</a>
+          <a href="sdk.html">SDK</a>
+          <a href="workflows.html">Workflows</a>
+          <a href="ecosystem.html">Ecosystem</a>
+        </nav>
+
+        <div class="search-wrap">
+          <input class="search-input" type="search" data-doc-search placeholder="Search docs..." aria-label="Search docs" />
+        </div>
+
+        <a class="topbar-cta" href="getting-started.html">Get Started</a>
+      </header>
+
+      <div class="page">
+        <section class="hero" data-searchable>
+          <div class="hero-copy">
+            <div class="badge">Now in beta v0.1.2</div>
+            <h1 class="title">Precision <span class="accent">Automation</span> for Web3.</h1>
+            <p class="lead">KeeperKit is the official TypeScript SDK for KeeperHub. It gives developers a typed, ergonomic interface for workflows, executions, chains, integrations, marketplace listings, and direct execution without hand-rolling HTTP calls against the raw API.</p>
+
+            <div class="actions">
+              <a class="button primary" href="getting-started.html">Get Started</a>
+              <a class="button secondary" href="sdk.html">Read the SDK Surface</a>
+            </div>
+
+            <div class="pill-row" style="margin-top:18px;">
+              <span class="pill">Node 18+</span>
+              <span class="pill">TypeScript-first</span>
+              <span class="pill">Flat + namespaced APIs</span>
+              <span class="pill">Retrying HTTP client</span>
+            </div>
+          </div>
+
+          <aside class="panel terminal">
+            <div class="terminal-bar">
+              <span></span><span></span><span></span>
+              <div class="terminal-label">terminal - bash</div>
+            </div>
+            <pre><code>pnpm --dir SDK install
+pnpm --dir SDK build
+
+import { KeeperKit } from "keeperkit";
+
+const client = new KeeperKit({
+  apiKey: process.env.KEEPERHUB_API_KEY,
+});
+
+const { executionId } = await client.executeWorkflow("wf_abc123");</code></pre>
+          </aside>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>What this SDK covers</h2>
+              <p class="subtitle">The docs site mirrors the actual SDK surface: workflows, executions, chains, integrations, marketplace workflows, MCP schemas, and helper utilities.</p>
+            </div>
+          </div>
+
+          <div class="stat-grid">
+            <div class="stat">
+              <strong>Client styles</strong>
+              <span>2</span>
+              <p>Use the flat KeeperKit class or the fully namespaced KeeperHub client.</p>
+            </div>
+            <div class="stat">
+              <strong>Transport</strong>
+              <span>1</span>
+              <p>One HTTP layer handles auth, retries, timeouts, and typed error mapping.</p>
+            </div>
+            <div class="stat">
+              <strong>Core modules</strong>
+              <span>9</span>
+              <p>Workflows, executions, direct execute, listed workflows, integrations, projects, tags, chains, and MCP schemas.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>High-signal entry points</h2>
+              <p class="subtitle">These are the first pages a new developer should read to understand the protocol and how to use the SDK in a real project.</p>
+            </div>
+          </div>
+
+          <div class="grid-3">
+            <article class="card">
+              <div class="mini-kicker">Protocol</div>
+              <h3>How a request becomes a workflow execution</h3>
+              <p>Read the message-to-execution flow, workflow resolution, status polling, and the failure modes you need to design around.</p>
+            </article>
+
+            <article class="card">
+              <div class="mini-kicker">Getting Started</div>
+              <h3>Install, build, and initialize the client</h3>
+              <p>Use the package from a local project, configure auth, and select the flat or namespaced API style that best fits your codebase.</p>
+            </article>
+
+            <article class="card">
+              <div class="mini-kicker">API Surface</div>
+              <h3>Explore workflows, executions, and direct actions</h3>
+              <p>Each module page includes method tables, examples, and the request patterns used by the SDK internals.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Protocol at a glance</h2>
+              <p class="subtitle">The SDK is the stable boundary between a host application and KeeperHub. The docs explain the full lifecycle from intent to execution.</p>
+            </div>
+          </div>
+
+          <div class="flow">
+            <div class="flow-item">
+              <div class="flow-step">1</div>
+              <div>
+                <h3>Resolve intent</h3>
+                <p>A host app identifies the workflow to run, typically by searching or matching workflow metadata.</p>
+              </div>
+            </div>
+            <div class="flow-item">
+              <div class="flow-step">2</div>
+              <div>
+                <h3>Load the workflow graph</h3>
+                <p>The SDK returns typed workflow objects with nodes, edges, enabled state, and project/tag filters.</p>
+              </div>
+            </div>
+            <div class="flow-item">
+              <div class="flow-step">3</div>
+              <div>
+                <h3>Execute and poll</h3>
+                <p>Execution starts with an execution ID, then status and logs are polled until a terminal state is reached.</p>
+              </div>
+            </div>
+            <div class="flow-item">
+              <div class="flow-step">4</div>
+              <div>
+                <h3>Handle retries and fallbacks</h3>
+                <p>The HTTP client automatically retries safe requests and normalizes timeouts, network failures, and typed KeeperKit errors.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Starter snippet</h2>
+              <p class="subtitle">A minimal example for developers who want to use the SDK directly in a Node.js or TypeScript app.</p>
+            </div>
+          </div>
+
+          <div class="code-shell">
+            <button class="copy-btn" type="button" data-copy>Copy</button>
+            <pre><code>import { KeeperKit } from "keeperkit";
+
+const client = new KeeperKit({
+  apiKey: process.env.KEEPERHUB_API_KEY,
+  timeout: 30000,
+  retry: {
+    maxAttempts: 5,
+    baseDelayMs: 1000,
+    retryWrites: false,
+  },
+});
+
+const workflows = await client.listWorkflows();
+const execution = await client.executeWorkflow(workflows[0].id);
+const result = await client.waitForExecution(workflows[0].id, execution.executionId);</code></pre>
+          </div>
+
+          <div class="callout" style="margin-top:16px;">
+            <p>The deeper module pages explain every field and method that appears in the README, including helper builders, validation, marketplace calls, and direct execution.</p>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <div class="footer-grid">
+            <div>
+              <strong>KeeperKit SDK docs</strong>
+              <div class="meta">Static docs site for developers integrating the SDK into their own projects.</div>
+            </div>
+            <div class="footer-links">
+              <a href="getting-started.html">Getting Started</a>
+              <a href="sdk.html">SDK Surface</a>
+              <a href="protocol.html">Protocol</a>
+              <a href="troubleshooting.html">Troubleshooting</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Workflows - KeeperKit SDK Docs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">KK</div>
+        <div>
+          <span class="brand-name">KeeperKit</span>
+          <span class="brand-subtitle">SDK Documentation</span>
+        </div>
+      </div>
+
+      <p class="sidebar-kicker">Workflows</p>
+
+      <nav class="sidebar-nav">
+        <a data-nav-link href="index.html">Overview</a>
+        <a data-nav-link href="protocol.html">Protocol</a>
+        <a data-nav-link href="getting-started.html">Getting Started</a>
+        <a data-nav-link href="sdk.html">SDK Surface</a>
+        <a data-nav-link href="workflows.html">Workflows</a>
+        <a data-nav-link href="executions.html">Executions</a>
+        <a data-nav-link href="direct-execute.html">Direct Execute</a>
+        <a data-nav-link href="ecosystem.html">Ecosystem</a>
+        <a data-nav-link href="troubleshooting.html">Troubleshooting</a>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Core primitive</strong>
+        <p>Workflows are directed graphs of trigger, action, and condition nodes connected by edges.</p>
+      </div>
+
+      <div class="sidebar-foot">
+        <div class="mini-kicker">Graph helpers</div>
+        <p class="meta">Use <code>createTriggerNode</code>, <code>createActionNode</code>, <code>createConditionNode</code>, and <code>validateWorkflowGraph</code>.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <nav class="topbar-links" aria-label="Primary">
+          <a href="index.html">Docs</a>
+          <a href="protocol.html">Protocol</a>
+          <a href="sdk.html">SDK</a>
+          <a href="workflows.html">Workflows</a>
+          <a href="executions.html">Executions</a>
+        </nav>
+
+        <div class="search-wrap">
+          <input class="search-input" type="search" data-doc-search placeholder="Search workflows..." aria-label="Search workflows" />
+        </div>
+
+        <a class="topbar-cta" href="executions.html">Executions</a>
+      </header>
+
+      <div class="page">
+        <section class="hero" data-searchable>
+          <div class="hero-copy">
+            <div class="badge">Workflow API</div>
+            <h1 class="title">Build graphs, then <span class="accent">execute</span> them.</h1>
+            <p class="lead">Workflows are the core building block of KeeperHub. The SDK gives you a full CRUD interface, execution helpers, enable/disable control, marketplace publication, and graph-building helpers for composing workflows programmatically.</p>
+
+            <div class="actions">
+              <a class="button primary" href="executions.html">See Executions</a>
+              <a class="button secondary" href="protocol.html">Read Protocol</a>
+            </div>
+          </div>
+
+          <aside class="panel terminal">
+            <div class="terminal-bar">
+              <span></span><span></span><span></span>
+              <div class="terminal-label">workflow graph</div>
+            </div>
+            <pre><code>trigger -> action -> condition -> branch
+
+graph validation catches:
+missing triggers
+orphan nodes
+dangling edges
+self-loops</code></pre>
+          </aside>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Workflow methods</h2>
+              <p class="subtitle">The SDK README describes the most common workflow operations. The namespaced module exposes the full set, while the flat API covers the primary tasks.</p>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Purpose</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>list(options)</td><td>List workflows with optional project, tag, and pagination filters</td><td>Use when resolving a workflow by metadata</td></tr>
+              <tr><td>get(id)</td><td>Fetch a single workflow by ID</td><td>Returns typed workflow details</td></tr>
+              <tr><td>create(input)</td><td>Create a workflow from a full definition</td><td>Accepts nodes, edges, and metadata</td></tr>
+              <tr><td>update(id, input)</td><td>Patch an existing workflow</td><td>Use for name, enabled flag, or definition changes</td></tr>
+              <tr><td>delete(id, options)</td><td>Delete a workflow</td><td>Optional force flag for active executions</td></tr>
+              <tr><td>enable(id) / disable(id)</td><td>Toggle workflow availability</td><td>Often used before execution</td></tr>
+              <tr><td>execute(id, input)</td><td>Start a workflow run</td><td>Returns executionId quickly</td></tr>
+              <tr><td>duplicate(id)</td><td>Clone a workflow</td><td>Useful for templating and experimentation</td></tr>
+              <tr><td>download(id)</td><td>Fetch the workflow JSON definition</td><td>Useful for export and review</td></tr>
+              <tr><td>goLive(id, options)</td><td>Publish a workflow to the marketplace</td><td>Links a workflow to public listing flows</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section grid-2" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Filters</div>
+            <h3>List by project or tag</h3>
+            <p>The list method accepts <code>projectId</code>, <code>tagId</code>, <code>page</code>, and <code>limit</code> so host apps can resolve workflows from a focused slice.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Publication</div>
+            <h3>Duplicate, download, and go live</h3>
+            <p>Use duplication for experiments, download for offline inspection, and <code>goLive</code> when you want to publish a workflow to the marketplace.</p>
+          </article>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Build a workflow graph</h2>
+              <p class="subtitle">The README shows a complete example. This version keeps the same structure while focusing on the pieces a developer needs to understand the graph model.</p>
+            </div>
+          </div>
+
+          <div class="code-shell">
+            <button class="copy-btn" type="button" data-copy>Copy</button>
+            <pre><code>import {
+  KeeperKit,
+  createTriggerNode,
+  createActionNode,
+  createConditionNode,
+  createEdge,
+  createConditionEdges,
+  templateRef,
+} from "keeperkit";
+
+const client = new KeeperKit({ apiKey: process.env.KEEPERHUB_API_KEY });
+
+const trigger = createTriggerNode({
+  id: "trigger_1",
+  label: "Every 5 Minutes",
+  triggerType: "schedule",
+  config: { interval: "*/5 * * * *" },
+});
+
+const action = createActionNode({
+  id: "check_balance",
+  label: "Check Wallet Balance",
+  actionType: "wallet-balance",
+  config: { chainId: 11155111, address: "0xYourWalletAddress" },
+});
+
+const condition = createConditionNode({
+  id: "balance_check",
+  label: "Balance Below Threshold",
+  expression: `${templateRef("check_balance", "Check Wallet Balance", "result.balance")} < 0.1`,
+});
+
+const edges = [
+  createEdge({ source: trigger.id, target: action.id }),
+  createEdge({ source: action.id, target: condition.id }),
+  ...createConditionEdges(condition.id, "notify_discord", "no_action"),
+];
+
+const workflow = await client.createWorkflow({
+  name: "Sepolia Balance Monitor",
+  description: "Alerts when wallet balance drops below 0.1 ETH",
+  nodes: [trigger, action, condition],
+  edges,
+  enabled: true,
+});</code></pre>
+          </div>
+        </section>
+
+        <section class="section grid-2" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Validation</div>
+            <h3>Check graphs locally</h3>
+            <p>Validate the workflow graph before sending it to KeeperHub so missing triggers, orphan nodes, or dangling edges are caught earlier.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Helpers</div>
+            <h3>Template references</h3>
+            <p>Use <code>templateRef</code>, <code>parseTemplateRef</code>, and <code>extractTemplateRefs</code> to reference previous node outputs in conditions and actions.</p>
+          </article>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="code-shell">
+            <button class="copy-btn" type="button" data-copy>Copy</button>
+            <pre><code>import { validateWorkflowGraph, validateNodeConfig } from "keeperkit";
+
+const result = validateWorkflowGraph(nodes, edges);
+if (!result.valid) {
+  for (const error of result.errors) {
+    console.error(error.message);
+  }
+}
+
+const nodeResult = validateNodeConfig(actionNode, ["chainId", "address"]);</code></pre>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <div class="footer-grid">
+            <div>
+              <strong>Workflow docs</strong>
+              <div class="meta">Next read Executions to see how workflow runs are monitored after the execute call returns.</div>
+            </div>
+            <div class="footer-links">
+              <a href="executions.html">Executions</a>
+              <a href="protocol.html">Protocol</a>
+              <a href="sdk.html">SDK Surface</a>
+              <a href="ecosystem.html">Ecosystem</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

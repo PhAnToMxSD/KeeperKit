@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Direct Execute - KeeperKit SDK Docs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">KK</div>
+        <div>
+          <span class="brand-name">KeeperKit</span>
+          <span class="brand-subtitle">SDK Documentation</span>
+        </div>
+      </div>
+
+      <p class="sidebar-kicker">Direct Execute</p>
+
+      <nav class="sidebar-nav">
+        <a data-nav-link href="index.html">Overview</a>
+        <a data-nav-link href="protocol.html">Protocol</a>
+        <a data-nav-link href="getting-started.html">Getting Started</a>
+        <a data-nav-link href="sdk.html">SDK Surface</a>
+        <a data-nav-link href="workflows.html">Workflows</a>
+        <a data-nav-link href="executions.html">Executions</a>
+        <a data-nav-link href="direct-execute.html">Direct Execute</a>
+        <a data-nav-link href="ecosystem.html">Ecosystem</a>
+        <a data-nav-link href="troubleshooting.html">Troubleshooting</a>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>One-off actions</strong>
+        <p>Direct execute covers transfer, contract calls, and conditional read-write flows without building a full workflow graph.</p>
+      </div>
+
+      <div class="sidebar-foot">
+        <div class="mini-kicker">Auth note</div>
+        <p class="meta">Direct execution can use a dedicated API key sent as <code>X-API-Key</code> when configured.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <nav class="topbar-links" aria-label="Primary">
+          <a href="index.html">Docs</a>
+          <a href="protocol.html">Protocol</a>
+          <a href="sdk.html">SDK</a>
+          <a href="direct-execute.html">Direct Execute</a>
+          <a href="ecosystem.html">Ecosystem</a>
+        </nav>
+
+        <div class="search-wrap">
+          <input class="search-input" type="search" data-doc-search placeholder="Search direct execute..." aria-label="Search direct execute" />
+        </div>
+
+        <a class="topbar-cta" href="ecosystem.html">Ecosystem</a>
+      </header>
+
+      <div class="page">
+        <section class="hero" data-searchable>
+          <div class="hero-copy">
+            <div class="badge">Direct execution</div>
+            <h1 class="title">Write on-chain without <span class="accent">graphs</span>.</h1>
+            <p class="lead">Use direct execution when a task is too small for a workflow but still needs the SDK's typed transport, chain normalization, and completion polling. This module covers transfers, contract calls, and conditional check-and-execute flows.</p>
+
+            <div class="actions">
+              <a class="button primary" href="executions.html">Execution Helpers</a>
+              <a class="button secondary" href="workflows.html">Workflow Graphs</a>
+            </div>
+          </div>
+
+          <aside class="panel terminal">
+            <div class="terminal-bar">
+              <span></span><span></span><span></span>
+              <div class="terminal-label">direct api</div>
+            </div>
+            <pre><code>transfer -> contract-call -> check-and-execute
+
+network resolves from chainId when needed:
+ethereum, sepolia, base, base-sepolia,
+polygon, arbitrum, optimism</code></pre>
+          </aside>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Direct execute methods</h2>
+              <p class="subtitle">The namespaced <code>directExecute</code> module exposes both action methods and a polling helper for completion status.</p>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Purpose</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>transfer(input)</td><td>Send native currency or ERC-20 tokens</td><td>Use <code>tokenAddress</code> for ERC-20s; omit it for native transfers</td></tr>
+              <tr><td>contractCall(input)</td><td>Call a contract function</td><td>Provide ABI, function name, args, and optional value</td></tr>
+              <tr><td>checkAndExecute(input)</td><td>Read a value and execute conditionally</td><td>Useful for guard-rail automation</td></tr>
+              <tr><td>getStatus(executionId)</td><td>Read direct execution state</td><td>Returns the current direct execution object</td></tr>
+              <tr><td>waitForCompletion(executionId, options)</td><td>Poll until terminal</td><td>Stops when status is <code>completed</code> or <code>failed</code></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section grid-2" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Network mapping</div>
+            <h3>Chain ID to network</h3>
+            <p>The module normalizes common chain IDs to network names so callers can use <code>chainId</code> for Ethereum, Base, Polygon, Arbitrum, and Optimism without manual translation.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Auth</div>
+            <h3>Dedicated API key support</h3>
+            <p>When a direct execution API key is provided, the module sends it as <code>X-API-Key</code> on requests that need it.</p>
+          </article>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Transfer and contract call examples</h2>
+              <p class="subtitle">These examples mirror the README while staying focused on the two most common direct execution use cases.</p>
+            </div>
+          </div>
+
+          <div class="code-shell">
+            <button class="copy-btn" type="button" data-copy>Copy</button>
+            <pre><code>const transfer = await client.directExecute.transfer({
+  chainId: 8453,
+  to: "0xRecipientAddress",
+  amount: "1000000",
+  tokenAddress: "0xTokenAddress",
+});
+
+const transferResult = await client.directExecute.waitForCompletion(transfer.id);
+
+const call = await client.directExecute.contractCall({
+  chainId: 1,
+  contractAddress: "0xContractAddress",
+  functionName: "approve",
+  abi: [/* ABI array */],
+  args: ["0xSpender", "1000000000000000000"],
+});</code></pre>
+          </div>
+        </section>
+
+        <section class="section grid-2" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Check and execute</div>
+            <h3>Read before writing</h3>
+            <p>The conditional flow reads on-chain state first, compares it against a condition, and only sends the write call when the predicate is satisfied.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Completion</div>
+            <h3>Poll to a terminal state</h3>
+            <p><code>waitForCompletion</code> hides the polling loop and returns the final execution object when the action reaches a completed or failed state.</p>
+          </article>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="callout warning">
+            <p>Use the smallest unit for amounts and remember that direct execution is intended for operations that do not need a full workflow graph or marketplace publication.</p>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <div class="footer-grid">
+            <div>
+              <strong>Next steps</strong>
+              <div class="meta">The ecosystem page covers chains, integrations, marketplace listings, MCP schemas, projects, tags, and helper utilities.</div>
+            </div>
+            <div class="footer-links">
+              <a href="ecosystem.html">Ecosystem</a>
+              <a href="troubleshooting.html">Troubleshooting</a>
+              <a href="executions.html">Executions</a>
+              <a href="sdk.html">SDK Surface</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

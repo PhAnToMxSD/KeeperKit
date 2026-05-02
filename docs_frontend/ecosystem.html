@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ecosystem - KeeperKit SDK Docs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">KK</div>
+        <div>
+          <span class="brand-name">KeeperKit</span>
+          <span class="brand-subtitle">SDK Documentation</span>
+        </div>
+      </div>
+
+      <p class="sidebar-kicker">Ecosystem</p>
+
+      <nav class="sidebar-nav">
+        <a data-nav-link href="index.html">Overview</a>
+        <a data-nav-link href="protocol.html">Protocol</a>
+        <a data-nav-link href="getting-started.html">Getting Started</a>
+        <a data-nav-link href="sdk.html">SDK Surface</a>
+        <a data-nav-link href="workflows.html">Workflows</a>
+        <a data-nav-link href="executions.html">Executions</a>
+        <a data-nav-link href="direct-execute.html">Direct Execute</a>
+        <a data-nav-link href="ecosystem.html">Ecosystem</a>
+        <a data-nav-link href="troubleshooting.html">Troubleshooting</a>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Broader SDK surface</strong>
+        <p>This page covers the modules that sit around workflows and executions: chains, integrations, marketplace, schemas, projects, tags, and helpers.</p>
+      </div>
+
+      <div class="sidebar-foot">
+        <div class="mini-kicker">Discovery</div>
+        <p class="meta">Use this page when you need to build a more complete product on top of the SDK.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <nav class="topbar-links" aria-label="Primary">
+          <a href="index.html">Docs</a>
+          <a href="protocol.html">Protocol</a>
+          <a href="sdk.html">SDK</a>
+          <a href="ecosystem.html">Ecosystem</a>
+          <a href="troubleshooting.html">Troubleshooting</a>
+        </nav>
+
+        <div class="search-wrap">
+          <input class="search-input" type="search" data-doc-search placeholder="Search ecosystem..." aria-label="Search ecosystem" />
+        </div>
+
+        <a class="topbar-cta" href="troubleshooting.html">Troubleshooting</a>
+      </header>
+
+      <div class="page">
+        <section class="hero" data-searchable>
+          <div class="hero-copy">
+            <div class="badge">Ecosystem</div>
+            <h1 class="title">Everything around the <span class="accent">workflow core</span>.</h1>
+            <p class="lead">KeeperKit also exposes modules for chains, integrations, marketplace listings, MCP schemas, projects, and tags. These pieces let product teams build richer experiences around the core workflow engine.</p>
+
+            <div class="actions">
+              <a class="button primary" href="sdk.html">Back to SDK Surface</a>
+              <a class="button secondary" href="workflows.html">Workflow Graphs</a>
+            </div>
+          </div>
+
+          <aside class="panel terminal">
+            <div class="terminal-bar">
+              <span></span><span></span><span></span>
+              <div class="terminal-label">ecosystem</div>
+            </div>
+            <pre><code>chains -> integrations -> marketplace
+projects -> tags -> schemas -> helpers</code></pre>
+          </aside>
+        </section>
+
+        <section class="section grid-3" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Chains</div>
+            <h3>Supported networks and ABI lookup</h3>
+            <p>List supported chains and fetch contract ABIs with automatic proxy resolution from the <code>chains</code> module.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Integrations</div>
+            <h3>Connections and credentials</h3>
+            <p>List, create, update, delete, and test integrations such as wallets, notifications, or protocol connectors.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Marketplace</div>
+            <h3>Listed workflows and payment flows</h3>
+            <p>Search public workflows by query, category, or chain and call them with typed payment challenge handling.</p>
+          </article>
+        </section>
+
+        <section class="section grid-3" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Schemas</div>
+            <h3>MCP discovery</h3>
+            <p>The MCP schema endpoint exposes actions, triggers, and chain metadata so apps can build dynamic forms and validators.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Projects and tags</div>
+            <h3>Organize workflows</h3>
+            <p>Projects and tags help teams group workflows and filter the list APIs by organization structure or runtime intent.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Helpers</div>
+            <h3>Status and template utilities</h3>
+            <p>Use template helpers, graph validators, and status normalizers to keep workflow logic portable and safe.</p>
+          </article>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Module overview</h2>
+              <p class="subtitle">This matrix makes it easy to find the right module when you are building a larger product on top of the SDK.</p>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Module</th>
+                <th>Key methods</th>
+                <th>Why it matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>chains</td><td>list, getAbi</td><td>Resolve chain support and fetch verified contract ABIs</td></tr>
+              <tr><td>integrations</td><td>list, get, create, update, delete, test</td><td>Manage stored credentials and connector state</td></tr>
+              <tr><td>listedWorkflows</td><td>search, call</td><td>Discover and invoke public workflows</td></tr>
+              <tr><td>projects</td><td>list, create, update, delete</td><td>Group workflows into product-level containers</td></tr>
+              <tr><td>tags</td><td>list, create, update, delete</td><td>Organize and filter workflows by tags</td></tr>
+              <tr><td>mcpSchemas</td><td>get</td><td>Fetch action, trigger, and chain schema metadata</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Useful ecosystem calls</h2>
+              <p class="subtitle">These examples show how the more specialized modules fit into a real integration.</p>
+            </div>
+          </div>
+
+          <div class="code-shell">
+            <button class="copy-btn" type="button" data-copy>Copy</button>
+            <pre><code>const chains = await client.listChains();
+const abi = await client.chains.getAbi(1, "0xContractAddress");
+
+const integrations = await client.listIntegrations();
+const created = await client.createIntegration({
+  name: "My Safe Wallet",
+  type: "safe",
+  config: { chainId: 1, safeAddress: "0xYourSafeAddress" },
+});
+
+const listed = await client.listedWorkflows.search({
+  query: "balance monitor",
+  category: "defi",
+  chain: "ethereum",
+});
+
+const schemas = await client.mcpSchemas.get();</code></pre>
+          </div>
+        </section>
+
+        <section class="section grid-2" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Payment challenges</div>
+            <h3>Structured public workflow calls</h3>
+            <p>If a listed workflow requires payment, the call returns a typed challenge object rather than a hard failure, so the caller can present the payment path to the user.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Status helpers</div>
+            <h3>Normalize workflow state</h3>
+            <p>The SDK exports status normalization helpers for workflows, direct execution, and unified status views so UI layers can remain consistent.</p>
+          </article>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="callout">
+            <p>When you are building a complete product on top of KeeperKit, this page is the bridge between the workflow runtime and the broader project, chain, and marketplace ecosystem.</p>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <div class="footer-grid">
+            <div>
+              <strong>Broad coverage</strong>
+              <div class="meta">If you need help with errors, timeouts, or local development, move to the Troubleshooting page next.</div>
+            </div>
+            <div class="footer-links">
+              <a href="troubleshooting.html">Troubleshooting</a>
+              <a href="sdk.html">SDK Surface</a>
+              <a href="workflows.html">Workflows</a>
+              <a href="direct-execute.html">Direct Execute</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

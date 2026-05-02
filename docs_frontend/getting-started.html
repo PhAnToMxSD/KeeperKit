@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Getting Started - KeeperKit SDK Docs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">KK</div>
+        <div>
+          <span class="brand-name">KeeperKit</span>
+          <span class="brand-subtitle">SDK Documentation</span>
+        </div>
+      </div>
+
+      <p class="sidebar-kicker">Getting Started</p>
+
+      <nav class="sidebar-nav">
+        <a data-nav-link href="index.html">Overview</a>
+        <a data-nav-link href="protocol.html">Protocol</a>
+        <a data-nav-link href="getting-started.html">Getting Started</a>
+        <a data-nav-link href="sdk.html">SDK Surface</a>
+        <a data-nav-link href="workflows.html">Workflows</a>
+        <a data-nav-link href="executions.html">Executions</a>
+        <a data-nav-link href="direct-execute.html">Direct Execute</a>
+        <a data-nav-link href="ecosystem.html">Ecosystem</a>
+        <a data-nav-link href="troubleshooting.html">Troubleshooting</a>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Start here</strong>
+        <p>Install the SDK, configure your API key, and decide whether you want the flat or namespaced API style.</p>
+      </div>
+
+      <div class="sidebar-foot">
+        <div class="mini-kicker">Requirements</div>
+        <p class="meta">Node.js 18+ and a KeeperHub API key that starts with <code>kh_</code>.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <nav class="topbar-links" aria-label="Primary">
+          <a href="index.html">Docs</a>
+          <a href="protocol.html">Protocol</a>
+          <a href="getting-started.html">Getting Started</a>
+          <a href="sdk.html">SDK</a>
+          <a href="workflows.html">Workflows</a>
+        </nav>
+
+        <div class="search-wrap">
+          <input class="search-input" type="search" data-doc-search placeholder="Search onboarding..." aria-label="Search onboarding" />
+        </div>
+
+        <a class="topbar-cta" href="sdk.html">Read SDK</a>
+      </header>
+
+      <div class="page">
+        <section class="hero" data-searchable>
+          <div class="hero-copy">
+            <div class="badge">Onboarding</div>
+            <h1 class="title">Install, build, and <span class="accent">initialize</span>.</h1>
+            <p class="lead">KeeperKit ships as a TypeScript package that targets Node 18 or later. You can install it directly, build the local dist output, and use either the flat API or the namespaced client depending on how much surface area your project needs.</p>
+
+            <div class="actions">
+              <a class="button primary" href="protocol.html">Read the Protocol</a>
+              <a class="button secondary" href="index.html">Back to Overview</a>
+            </div>
+          </div>
+
+          <aside class="panel terminal">
+            <div class="terminal-bar">
+              <span></span><span></span><span></span>
+              <div class="terminal-label">quick start</div>
+            </div>
+            <pre><code>cd SDK
+pnpm install
+pnpm build
+
+import { KeeperKit } from "keeperkit";
+
+const client = new KeeperKit({
+  apiKey: process.env.KEEPERHUB_API_KEY,
+});</code></pre>
+          </aside>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="callout">
+            <p>To work with the KeeperHub SDK, clone this repository first: <code>git clone https://github.com/PhAnToMxSD/KeeperKit</code>. Then move into <code>SDK/</code>, install dependencies, and build the package before importing it into your own project.</p>
+          </div>
+
+          <div class="code-shell" style="margin-top:16px;">
+            <button class="copy-btn" type="button" data-copy>Copy</button>
+            <pre><code>git clone https://github.com/PhAnToMxSD/KeeperKit
+cd KeeperKit/SDK
+pnpm install
+pnpm build</code></pre>
+          </div>
+        </section>
+
+        <section class="section grid-3" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Step 1</div>
+            <h3>Install dependencies</h3>
+            <p>Run <code>pnpm install</code> inside the <code>SDK/</code> folder to install the package dependencies and test tooling.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Step 2</div>
+            <h3>Build the distribution</h3>
+            <p>The build produces <code>dist/index.js</code>, <code>dist/index.mjs</code>, and <code>dist/index.d.ts</code>.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Step 3</div>
+            <h3>Initialize the client</h3>
+            <p>Create a <code>KeeperKit</code> instance with your API key and optional base URL, timeout, and retry policy.</p>
+          </article>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Install and build</h2>
+              <p class="subtitle">These are the exact commands a developer needs to start using the SDK locally.</p>
+            </div>
+          </div>
+
+          <div class="code-shell">
+            <button class="copy-btn" type="button" data-copy>Copy</button>
+            <pre><code>cd SDK
+pnpm install
+pnpm build
+pnpm type-check
+pnpm test</code></pre>
+          </div>
+        </section>
+
+        <section class="section grid-2" data-searchable>
+          <article class="card">
+            <div class="mini-kicker">Initialization</div>
+            <h3>Create a client</h3>
+            <p>The SDK accepts an organization API key and optional overrides for the KeeperHub base URL, timeout, and retry behavior.</p>
+            <div class="code-shell" style="margin-top:16px;">
+              <button class="copy-btn" type="button" data-copy>Copy</button>
+              <pre><code>import { KeeperKit } from "keeperkit";
+
+const client = new KeeperKit({
+  apiKey: process.env.KEEPERHUB_API_KEY,
+  baseUrl: "https://app.keeperhub.com/api",
+  timeout: 30000,
+  retry: {
+    maxAttempts: 5,
+    baseDelayMs: 1000,
+    maxDelayMs: 30000,
+    retryWrites: false,
+  },
+});</code></pre>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="mini-kicker">Local linking</div>
+            <h3>Use the SDK from another repo</h3>
+            <p>Because the package builds to a standard <code>dist/</code> directory, you can link it locally or reference it with a file dependency.</p>
+            <div class="code-shell" style="margin-top:16px;">
+              <button class="copy-btn" type="button" data-copy>Copy</button>
+              <pre><code>cd SDK
+pnpm link --global
+
+cd /path/to/consumer-project
+pnpm link --global keeperkit</code></pre>
+            </div>
+          </article>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="section-head">
+            <div>
+              <h2>Flat API vs namespaced API</h2>
+              <p class="subtitle">The README exposes both styles. Use the flat API for common operations and the namespaced client when you need direct access to every module.</p>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <article class="card">
+              <div class="mini-kicker">Flat API</div>
+              <h3>Recommended for most apps</h3>
+              <p>Methods like <code>listWorkflows</code>, <code>executeWorkflow</code>, and <code>waitForExecution</code> cover the common workflow lifecycle.</p>
+            </article>
+
+            <article class="card">
+              <div class="mini-kicker">Namespaced API</div>
+              <h3>Full access to every module</h3>
+              <p>Access <code>client.workflows</code>, <code>client.executions</code>, <code>client.directExecute</code>, and more for advanced integrations.</p>
+            </article>
+          </div>
+
+          <div class="code-shell" style="margin-top:16px;">
+            <button class="copy-btn" type="button" data-copy>Copy</button>
+            <pre><code>import { KeeperKit, createKeeperHubClient } from "keeperkit";
+
+const flat = new KeeperKit({ apiKey: process.env.KEEPERHUB_API_KEY });
+const namespaced = createKeeperHubClient({ apiKey: process.env.KEEPERHUB_API_KEY });
+
+const workflows = await flat.listWorkflows();
+const logs = await namespaced.executions.getLogs("exec_123");</code></pre>
+          </div>
+        </section>
+
+        <section class="section" data-searchable>
+          <div class="callout warning">
+            <p>KeeperHub API keys start with <code>kh_</code>. The auth provider rejects keys that do not match that prefix, which helps catch configuration errors early.</p>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <div class="footer-grid">
+            <div>
+              <strong>Ready for the API reference?</strong>
+              <div class="meta">Next read the SDK Surface page for exports, auth providers, retry, and typed errors.</div>
+            </div>
+            <div class="footer-links">
+              <a href="sdk.html">SDK Surface</a>
+              <a href="workflows.html">Workflows</a>
+              <a href="executions.html">Executions</a>
+              <a href="troubleshooting.html">Troubleshooting</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
