@@ -1,6 +1,15 @@
 # KeeperKit
+KeeperKit is a TypeScript SDK for the [KeeperHub](https://keeperhub.com) blockchain automation protocol. It gives developers a typed, ergonomic interface for managing workflows, triggering executions, querying chains, and connecting integrations — all without hand-rolling HTTP calls against the raw API.
 
-KeeperKit is the official TypeScript SDK for the KeeperHub blockchain automation protocol. It gives developers a typed, ergonomic interface for managing workflows, triggering executions, querying chains, and connecting integrations -- all without hand-rolling HTTP calls against the raw API.
+**Features:**
+- 🎯 **Type-safe API** — Full TypeScript support with comprehensive type definitions
+- 🚀 **Two API styles** — Flat API for common operations + namespaced API for advanced use cases
+- 🔄 **Workflow Management** — Create, update, enable/disable, and monitor workflows
+- ⚡ **Direct Execution** — One-off on-chain operations (transfers, contract calls, conditional execution)
+- 💰 **Marketplace Integration** — Search and call listed workflows with x402 payment support
+- 🔗 **Multi-chain** — Support for 50+ EVM-compatible chains
+- 🛡️ **Error Handling** — Comprehensive error types with structured information
+- 📦 **ElizaOS Plugin** — AI agent integration via `@keeperhub/plugin-keeperkit`
 
 ## Repository Structure
 
@@ -8,68 +17,73 @@ This monorepo contains two independent packages:
 
 | Package | Path | Description |
 |---------|------|-------------|
+| `developer documentation` | `docs_frontend` | The web documentation of the KeeperKit |
 | `keeperkit` | `./SDK/` | Platform-agnostic TypeScript SDK for KeeperHub |
 | `@keeperhub/plugin-keeperkit` | `./plugin-elizaos/` | ElizaOS plugin wrapping the SDK for AI agents |
 
 ---
 
-This repository contains the SDK source code. You can integrate it into any Node.js or TypeScript project to programmatically interact with KeeperHub.
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18 or later (the SDK uses the native `fetch` API)
-- A KeeperHub account with an API key (available under **Settings > API Keys** in the KeeperHub dashboard at [app.keeperhub.com](https://app.keeperhub.com))
+## Quick Start
 
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/PhAnToMxSD/KeeperKit.git
+git clone https://github.com/KeeperHub/KeeperKit.git
 cd KeeperKit
 ```
-
-The SDK source code lives inside the `SDK/src/` directory. That folder contains all the modules, models, helpers, and the main `KeeperKit` client class.
 
 ### Install Dependencies
 
 ```bash
-cd SDK
 pnpm install
 ```
 
-### Build the SDK
+### Build the Project
 
 ```bash
 pnpm build
 ```
 
-This produces the `dist/` folder containing `index.js` (CommonJS), `index.mjs` (ESM), and `index.d.ts` (type declarations). You can reference the built output directly from your project, or copy the `SDK/` folder into your monorepo as a local package.
+This produces:
+- `SDK/dist/index.js` (CommonJS)
+- `SDK/dist/index.mjs` (ESM)
+- `SDK/dist/index.d.ts` (TypeScript declarations)
 
-### Using KeeperKit as a Local Dependency
+### For Node.js/TypeScript Projects
 
-If you want to use the SDK in another project on your machine, you can link it:
+```typescript
+import { KeeperKit } from "keeperkit";
 
-```bash
-# Inside the SDK/ directory
-pnpm link --global
+const client = new KeeperKit({
+  apiKey: process.env.KEEPERHUB_API_KEY,
+});
 
-# Inside your consumer project
-pnpm link --global keeperkit
+// List workflows
+const workflows = await client.listWorkflows();
+
+// Execute a workflow
+const { executionId } = await client.executeWorkflow(workflows[0].id);
+
+// Wait for completion
+const result = await client.waitForExecution(workflows[0].id, executionId);
+console.log("Status:", result.status);
 ```
 
-Or reference it directly in your project's `package.json`:
+### For ElizaOS Agents
 
-```json
-{
-  "dependencies": {
-    "keeperkit": "file:../path/to/KeeperKit/SDK"
-  }
-}
+```typescript
+import { keeperKitPlugin } from '@keeperhub/plugin-keeperkit';
+
+// Register in your ElizaOS agent configuration
+const agent = {
+  plugins: [keeperKitPlugin],
+  settings: {
+    KEEPERHUB_API_KEY: process.env.KEEPERHUB_API_KEY,
+  },
+};
+
+// Agents now have 22 built-in KeeperHub actions
 ```
-
 ---
 
 ## Initialization
@@ -112,7 +126,9 @@ const client = new KeeperKit({
 
 ---
 
-## Workflows
+## API Reference
+
+### Workflows
 
 Workflows are the core building blocks of KeeperHub. Each workflow is a directed graph of trigger, action, and condition nodes connected by edges.
 
@@ -700,6 +716,45 @@ The build produces CommonJS (`dist/index.js`), ESM (`dist/index.mjs`), and TypeS
 
 ---
 
+## Support & Resources
+
+- **Documentation**: [docs.keeperhub.com](https://docs.keeperhub.com)
+- **Dashboard**: [app.keeperhub.com](https://app.keeperhub.com)
+- **Issues**: [GitHub Issues](https://github.com/KeeperHub/KeeperKit/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/KeeperHub/KeeperKit/discussions)
+
+---
+
+## Contributing
+
+We welcome contributions! Please read our [contributing guidelines](./CONTRIBUTING.md) before submitting PRs.
+
+### Development Workflow
+
+```bash
+# Clone and install
+git clone https://github.com/KeeperHub/KeeperKit.git
+cd KeeperKit
+pnpm install
+
+# Build both packages
+pnpm build
+
+# Run all tests
+pnpm test
+
+# Type-check everything
+pnpm type-check
+```
+
+---
+
 ## License
 
 MIT License. See [LICENSE](./LICENSE) for details.
+
+---
+
+## Authors
+
+**KeeperKit** is developed and maintained by [Aradhya Agrawal](https://github.com/PhAnToMxSD) and the KeeperHub community.
