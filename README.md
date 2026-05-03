@@ -568,7 +568,7 @@ This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for d
 
 ## 👥 Credits
 
-Built with ❤️ for **ETHGlobal Hackathon** by **PhAnToMxSD**, **Tathagat98** and **Okheer**.
+Built with ❤️ for **ETHGlobal Hackathon** by **PhAnToMxSD**, **TathagatGupta98** and **Okheer**.
 
 **KeeperHub API Reference:** [docs.keeperhub.com](https://docs.keeperhub.com)  
 **ElizaOS Framework:** [elizaos.ai](https://elizaos.ai)
