@@ -1,6 +1,6 @@
 # KeeperKit
 
-> **The Official TypeScript SDK + ElizaOS Plugin for KeeperHub Blockchain Automation**
+> **The TypeScript SDK + ElizaOS Plugin for KeeperHub Blockchain Automation**
 
 KeeperKit solves a fundamental problem: developers had no ergonomic way to build on KeeperHub. Every integration required hand-rolling HTTP calls, writing custom retry logic, and managing error handling manually. We built KeeperKit to change that — a fully typed SDK, an AI-ready ElizaOS plugin, and a production consumer application proving it all works end-to-end.
 
@@ -568,7 +568,7 @@ This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for d
 
 ## 👥 Credits
 
-Built with ❤️ for **ETHGlobal Hackathon** by **PhAnToMxSD** and the community.
+Built with ❤️ for **ETHGlobal Hackathon** by **PhAnToMxSD**, **Tathagat98** and **Okheer**.
 
 **KeeperHub API Reference:** [docs.keeperhub.com](https://docs.keeperhub.com)  
 **ElizaOS Framework:** [elizaos.ai](https://elizaos.ai)
