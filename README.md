@@ -1,760 +1,579 @@
 # KeeperKit
-KeeperKit is a TypeScript SDK for the [KeeperHub](https://keeperhub.com) blockchain automation protocol. It gives developers a typed, ergonomic interface for managing workflows, triggering executions, querying chains, and connecting integrations — all without hand-rolling HTTP calls against the raw API.
 
-**Features:**
-- 🎯 **Type-safe API** — Full TypeScript support with comprehensive type definitions
-- 🚀 **Two API styles** — Flat API for common operations + namespaced API for advanced use cases
-- 🔄 **Workflow Management** — Create, update, enable/disable, and monitor workflows
-- ⚡ **Direct Execution** — One-off on-chain operations (transfers, contract calls, conditional execution)
-- 💰 **Marketplace Integration** — Search and call listed workflows with x402 payment support
-- 🔗 **Multi-chain** — Support for 50+ EVM-compatible chains
-- 🛡️ **Error Handling** — Comprehensive error types with structured information
-- 📦 **ElizaOS Plugin** — AI agent integration via `@keeperhub/plugin-keeperkit`
+> **The Official TypeScript SDK + ElizaOS Plugin for KeeperHub Blockchain Automation**
 
-## Repository Structure
-
-This monorepo contains two independent packages:
-
-| Package | Path | Description |
-|---------|------|-------------|
-| `developer documentation` | `docs_frontend` | The web documentation of the KeeperKit |
-| `keeperkit` | `./SDK/` | Platform-agnostic TypeScript SDK for KeeperHub |
-| `@keeperhub/plugin-keeperkit` | `./plugin-elizaos/` | ElizaOS plugin wrapping the SDK for AI agents |
+KeeperKit solves a fundamental problem: developers had no ergonomic way to build on KeeperHub. Every integration required hand-rolling HTTP calls, writing custom retry logic, and managing error handling manually. We built KeeperKit to change that — a fully typed SDK, an AI-ready ElizaOS plugin, and a production consumer application proving it all works end-to-end.
 
 ---
 
-## Quick Start
+## 🎯 What is KeeperHub?
 
-### Clone the Repository
+KeeperHub is a blockchain automation protocol that enables you to build complex on-chain workflows. Think of it as the execution engine for decentralized finance: you design a directed graph of triggers, conditions, and actions, then KeeperHub handles the actual execution on-chain across multiple EVM-compatible chains.
 
-```bash
-git clone https://github.com/KeeperHub/KeeperKit.git
-cd KeeperKit
+**KeeperKit is your gateway to KeeperHub** — for developers building integrations, for AI agents executing autonomously, and for end users enjoying invisible abstraction layers.
+
+---
+
+## 🚀 Key Highlights
+
+### For Developers
+
+✅ **Fully Typed TypeScript SDK** — No more hand-rolling fetch calls. Import `KeeperKit`, authenticate, get typed methods.  
+✅ **Automatic Retry Logic** — Failed GET requests retry with exponential backoff. Configurable for your use case.  
+✅ **Semantic Error Handling** — HTTP errors map to TypeScript types (`NotFoundError`, `UnauthorizedError`, etc.).  
+✅ **First-Class Pagination** — List operations support `page` and `limit`. No cursor parsing.  
+✅ **Execution Polling** — Trigger a workflow and poll status/logs with built-in retry handling for natural indexing delays.  
+
+### For AI Agents
+
+✅ **ElizaOS Plugin** — 22 native actions + 3 context providers. Register once, get full KeeperHub access.  
+✅ **Natural Language → On-Chain** — "Transfer 100 USDC" becomes a multi-step execution.  
+✅ **x402 Payment Support** — Automatic handling of marketplace payment challenges.  
+
+### For End Users  
+
+✅ **Consumer Apps** — Build Keeper University-style applications on top of KeeperKit.  
+✅ **Hidden Complexity** — Let users describe intent; the SDK handles the rest.  
+
+---
+
+## 📊 Architecture Overview
+
+<img width="1408" height="768" alt="Workflow" src="https://github.com/user-attachments/assets/a2f5086b-1735-4e02-8f7d-982a8fcda963" />
+
+---
+
+## 📂 Repository Structure
+
+```
+KeeperKit/
+├── SDK/                          # Main TypeScript SDK (v0.1.2)
+│   ├── src/
+│   │   ├── keeperkit.ts         # Main client class
+│   │   ├── client/              # HTTP, auth, retry, errors
+│   │   ├── modules/             # workflows, executions, chains, etc.
+│   │   ├── helpers/             # Graph builders, validation
+│   │   ├── models/              # TypeScript types
+│   │   └── __tests__/           # 211 unit tests
+│   ├── dist/                    # Built: CJS, ESM, .d.ts
+│   └── package.json
+│
+├── plugin-elizaos/              # ElizaOS plugin (@keeperhub/plugin-keeperkit)
+│   ├── src/
+│   │   ├── index.ts            # Plugin entry + action exports
+│   │   ├── services/           # KeeperKit client setup
+│   │   ├── actions/            # 22 action handlers (organized by domain)
+│   │   ├── providers/          # 3 context providers (dynamic injection)
+│   │   ├── evaluators/         # Action evaluation logic
+│   │   └── types/              # Plugin-specific interfaces
+│   ├── __tests__/              # Plugin unit tests
+│   └── package.json
+│
+├── frontend/                     # Local Gemini-powered chat agent
+│   ├── server.js               # HTTP server (intent → SDK calls)
+│   ├── characters/
+│   │   └── keeper-agent.json   # LLM system prompt + settings
+│   ├── elizaos.config.ts       # ElizaOS configuration
+│   ├── public/
+│   │   ├── app.js              # Chat UI client code
+│   │   ├── index.html          # Chat interface
+│   │   └── styles.css          # Styling
+│   ├── .env                    # Environment config (not committed)
+│   └── package.json
+│
+├── stitch_keeperhub_academic_defi_workflows/  # Consumer app: Keeper University
+│   ├── index.html              # Landing page (hero + features)
+│   ├── dashboard.html          # Execution dashboard
+│   ├── chat.html               # AI Workflow Builder (hard-coded + live)
+│   ├── app.js                  # Application logic
+│   ├── app.css                 # Full design system
+│   ├── assistant.js            # Agent bridge
+│   └── academic_precision/
+│       └── DESIGN.md           # Design documentation
+│
+├── docs/                        # Developer documentation
+│   └── docs_mdfiles/
+│       ├── README.md           # Docs index
+│       ├── QUICKSTART.md       # Get running in 5 minutes
+│       ├── API.md              # SDK module reference
+│       ├── PROTOCOL.md         # End-to-end protocol flow
+│       ├── ENVIRONMENT.md      # Configuration variables
+│       └── DESIGN.md           # Design tokens
+│
+├── docs_frontend/              # Multi-page HTML docs site
+│   ├── index.html              # Overview
+│   ├── getting-started.html    # Onboarding
+│   ├── sdk.html                # SDK surface
+│   ├── workflows.html          # Workflow graph API
+│   ├── executions.html         # Status polling & logs
+│   ├── direct-execute.html     # One-off on-chain operations
+│   ├── ecosystem.html          # Chains, integrations, marketplace
+│   ├── protocol.html           # Flow diagrams
+│   ├── troubleshooting.html    # Common issues
+│   └── scripts.js              # Navigation & interactivity
+│
+├── AGENTS.md                   # Autonomous agent guide
+├── demo_script.html            # 5-minute demo video script (ETHGlobal)
+├── LICENSE
+├── package.json                # Monorepo root (pnpm workspaces)
+└── pnpm-workspace.yaml
 ```
 
-### Install Dependencies
+---
+
+## 🎬 ETHGlobal Submission
+
+This project addresses **two focus areas simultaneously**:
+
+**Focus Area 2: Integration Bridge**  
+→ KeeperKit SDK + `@keeperhub/plugin-keeperkit` give every TypeScript developer and ElizaOS agent first-class programmatic access to KeeperHub.
+
+**Focus Area 1: Consumer Application**  
+→ Keeper University — a complete academic DeFi payment platform proving the SDK works end-to-end in production.
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js 18+** (native `fetch` required)
+- **pnpm** (or npm)
+- **KeeperHub API Key** — get one at [app.keeperhub.com](https://app.keeperhub.com) → Settings → API Keys
+
+### 1. Clone & Install
 
 ```bash
+git clone https://github.com/PhAnToMxSD/KeeperKit.git
+cd KeeperKit
 pnpm install
 ```
 
-### Build the Project
+### 2. Configure Environment
 
-```bash
-pnpm build
+Create `frontend/.env`:
+
+```env
+KEEPERHUB_API_KEY=kh_your_api_key_here
+GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_api_key_here
+KEEPERHUB_BASE_URL=https://app.keeperhub.com/api
+SERVER_PORT=3000
 ```
 
-This produces:
-- `SDK/dist/index.js` (CommonJS)
-- `SDK/dist/index.mjs` (ESM)
-- `SDK/dist/index.d.ts` (TypeScript declarations)
+### 3. Build & Run
 
-### For Node.js/TypeScript Projects
+```bash
+# Build the SDK (required first)
+pnpm build:sdk
+
+# Start the frontend agent
+cd frontend
+pnpm run dev
+```
+
+Visit **http://localhost:3000** in your browser. Try these commands:
+
+- `"List my workflows"`
+- `"Execute workflow Savings Vault Performance Tracker"`
+- `"What chains are supported?"`
+- `"Transfer 100 USDC to 0xRecipient on Base"`
+
+---
+
+## 📚 SDK Usage
+
+### Initialize
 
 ```typescript
 import { KeeperKit } from "keeperkit";
 
 const client = new KeeperKit({
-  apiKey: process.env.KEEPERHUB_API_KEY,
+  apiKey: process.env.KEEPERHUB_API_KEY,  // must start with kh_
 });
-
-// List workflows
-const workflows = await client.listWorkflows();
-
-// Execute a workflow
-const { executionId } = await client.executeWorkflow(workflows[0].id);
-
-// Wait for completion
-const result = await client.waitForExecution(workflows[0].id, executionId);
-console.log("Status:", result.status);
 ```
 
-### For ElizaOS Agents
+### List & Execute Workflows
+
+```typescript
+const workflows = await client.workflows.list();
+
+const executionId = await client.workflows.execute("wf_abc123");
+const status = await client.executions.getStatus(executionId);
+```
+
+### Create Workflows with Graph Builders
+
+```typescript
+import { 
+  createTriggerNode, 
+  createActionNode, 
+  createEdge,
+  validateWorkflowGraph 
+} from "keeperkit";
+
+const workflow = await client.workflows.create({
+  name: "Fee Collection",
+  nodes: [
+    createTriggerNode({ id: "t1", triggerType: "schedule", ... }),
+    createActionNode({ id: "a1", actionType: "uniswap-swap", ... }),
+  ],
+  edges: [createEdge({ source: "t1", target: "a1" })],
+  enabled: true,
+});
+```
+
+### Direct On-Chain Operations
+
+```typescript
+// No workflow needed — execute immediately
+const transfer = await client.directExecute.transfer({
+  chainId: 8453,
+  to: "0xRecipient",
+  amount: "1000000",
+  tokenAddress: "0xUSDC_on_base",
+});
+```
+
+### Marketplace with x402 Payments
+
+```typescript
+const result = await client.listedWorkflows.call("yield-optimizer", {
+  address: "0xUserAddress",
+});
+
+if ("paymentRequired" in result) {
+  console.log("Price:", result.paymentRequired.priceUsdcPerCall, "USDC");
+  // Auto-pays via agent wallet if available
+}
+```
+
+### Error Handling
+
+```typescript
+import { NotFoundError, AuthError, KeeperKitError } from "keeperkit";
+
+try {
+  await client.workflows.get("wf_invalid");
+} catch (err) {
+  if (err instanceof NotFoundError) {
+    console.error("Workflow not found");
+  } else if (err instanceof AuthError) {
+    console.error("Invalid API key");
+  }
+}
+```
+
+---
+
+## 🤖 ElizaOS Plugin
+
+### Installation
+
+```bash
+npm install @keeperhub/plugin-keeperkit
+```
+
+### Configuration
 
 ```typescript
 import { keeperKitPlugin } from '@keeperhub/plugin-keeperkit';
 
-// Register in your ElizaOS agent configuration
 const agent = {
   plugins: [keeperKitPlugin],
   settings: {
     KEEPERHUB_API_KEY: process.env.KEEPERHUB_API_KEY,
   },
 };
-
-// Agents now have 22 built-in KeeperHub actions
-```
----
-
-## Initialization
-
-Create a client instance by passing your API key. All API keys start with the `kh_` prefix.
-
-```typescript
-import { KeeperKit } from "keeperkit";
-
-const client = new KeeperKit({
-  apiKey: process.env.KEEPERHUB_API_KEY,
-});
 ```
 
-The client connects to `https://app.keeperhub.com/api` by default. You can override this for local development or staging environments:
+### 22 Built-in Actions
 
-```typescript
-const client = new KeeperKit({
-  apiKey: "kh_test_your_key_here",
-  baseUrl: "http://localhost:3000/api",
-  timeout: 15000, // request timeout in ms (default: 30000)
-});
+**Workflows** — List, get, create, update, delete, enable, disable (7)  
+**Executions** — Trigger, status, history, logs, wait (5)  
+**Direct Execute** — Token transfer, contract call, conditional execution (3)  
+**Marketplace** — Search, call with x402 support (2)  
+**Integrations** — List, create, delete (3)  
+**Chains & Schemas** — List chains, fetch ABI, discover MCP schemas (3)  
+
+### Example Prompts
+
 ```
-
-### Retry Configuration
-
-The SDK automatically retries failed GET requests with exponential backoff. You can customize this behavior:
-
-```typescript
-const client = new KeeperKit({
-  apiKey: process.env.KEEPERHUB_API_KEY,
-  retry: {
-    maxAttempts: 3,       // default: 5
-    baseDelayMs: 500,     // default: 1000
-    maxDelayMs: 10000,    // default: 30000
-    retryWrites: false,   // set true to retry POST/PATCH/DELETE too
-  },
-});
+"List all my active workflows"
+"Execute the balance monitor workflow"
+"Transfer 100 USDC to 0xAddr on Base"
+"What chains does KeeperHub support?"
+"Call the yield-optimizer from the marketplace"
 ```
 
 ---
 
-## API Reference
+## 🏫 Consumer App: Keeper University
 
-### Workflows
+**Keeper University** is a real, production-ready application built entirely on KeeperKit. It demonstrates how to hide blockchain complexity and surface intent-based workflows to end users.
 
-Workflows are the core building blocks of KeeperHub. Each workflow is a directed graph of trigger, action, and condition nodes connected by edges.
+### The Problem
 
-### List Workflows
+Students have crypto scattered across:
+- 🪙 MetaMask, Phantom, Ledger wallets
+- 📊 Aave, Uniswap positions  
+- 🏦 Coinbase, Kraken accounts
+- 💰 Staked SOL, delegated assets
 
-```typescript
-const workflows = await client.listWorkflows();
+Universities need to split incoming tuition across:
+- 🏨 Hostel fees (35%)
+- 🎓 Lecture halls (20%)
+- 🍽️ Dining (18%)
+- 🔬 Labs (12%)
+- 👥 Student services (10%)
+- 🆘 Emergency reserve (5%)
 
-// With pagination
-const page2 = await client.listWorkflows({ page: 2, limit: 10 });
+**Neither party can do this easily without complex code.**
+
+### Solution
+
+**Keeper University uses KeeperKit to:**
+
+1. **Student Fee Collection** — Aggregate crypto from multiple sources into tuition payment
+2. **University Fund Distribution** — Auto-split payments across departments
+3. **Scholarship & Refund Routing** — Conditional payouts with audit trails
+4. **AI Workflow Builder** — Natural language: *"Collect my Aave position and pay tuition"* → Automatic execution
+
+### How It Works
+
+```
+User types:
+"Collect my ETH from Aave and pay my Fall semester fee"
+                    ↓
+          Keeper Agent (Gemini)
+                    ↓
+        KeeperKit SDK resolves:
+    - Find Aave position (Lending Pool ABI)
+    - Withdraw ETH
+    - Swap ETH → USDC
+    - Bridge to destination chain
+    - Send to university account
+                    ↓
+        KeeperHub executes on-chain
+                    ↓
+    User sees: "✅ Tuition paid! Execution ID: exec_001"
 ```
 
-### Get a Single Workflow
+### Pages
 
-```typescript
-const workflow = await client.getWorkflow("wf_abc123");
-console.log(workflow.name, workflow.enabled);
-```
+- **index.html** — Landing page with hero, features, SDK code sample
+- **dashboard.html** — Metrics ($4.2M processed, 142 workflows), transaction history
+- **chat.html** — AI Workflow Builder with 4 hard-coded examples + live chat
 
-### Create a Workflow
+### Run Keeper University
 
-A workflow definition requires a name, an array of nodes, and an array of edges connecting them. Here is a complete example that creates a workflow to monitor a wallet balance on Sepolia and send a Discord notification:
+```bash
+# No build step — plain HTML/CSS/JS
+python3 -m http.server 8124 --directory stitch_keeperhub_academic_defi_workflows
+# → http://localhost:8124
 
-```typescript
-import {
-  KeeperKit,
-  createTriggerNode,
-  createActionNode,
-  createConditionNode,
-  createEdge,
-  createConditionEdges,
-  templateRef,
-} from "keeperkit";
-
-const client = new KeeperKit({ apiKey: process.env.KEEPERHUB_API_KEY });
-
-// Step 1: Define the nodes
-
-const trigger = createTriggerNode({
-  id: "trigger_1",
-  label: "Every 5 Minutes",
-  triggerType: "schedule",
-  config: { interval: "*/5 * * * *" },
-});
-
-const checkBalance = createActionNode({
-  id: "check_balance",
-  label: "Check Wallet Balance",
-  actionType: "wallet-balance",
-  config: {
-    chainId: 11155111, // Sepolia
-    address: "0xYourWalletAddress",
-  },
-  position: { x: 250, y: 150 },
-});
-
-const condition = createConditionNode({
-  id: "balance_check",
-  label: "Balance Below Threshold",
-  expression: `${templateRef("check_balance", "Check Wallet Balance", "result.balance")} < 0.1`,
-  position: { x: 250, y: 300 },
-});
-
-const notifyDiscord = createActionNode({
-  id: "discord_notify",
-  label: "Send Discord Alert",
-  actionType: "discord-send-message",
-  config: {
-    channelId: "123456789",
-    message: `Low balance alert: ${templateRef("check_balance", "Check Wallet Balance", "result.balance")} ETH remaining`,
-  },
-  position: { x: 100, y: 450 },
-});
-
-const noOp = createActionNode({
-  id: "no_action",
-  label: "Balance OK",
-  actionType: "no-op",
-  position: { x: 400, y: 450 },
-});
-
-// Step 2: Connect nodes with edges
-
-const edges = [
-  createEdge({ source: "trigger_1", target: "check_balance" }),
-  createEdge({ source: "check_balance", target: "balance_check" }),
-  ...createConditionEdges("balance_check", "discord_notify", "no_action"),
-];
-
-// Step 3: Submit to KeeperHub
-
-const workflow = await client.createWorkflow({
-  name: "Sepolia Balance Monitor",
-  description: "Alerts when wallet balance drops below 0.1 ETH",
-  nodes: [trigger, checkBalance, condition, notifyDiscord, noOp],
-  edges,
-  enabled: true,
-});
-
-console.log("Created workflow:", workflow.id);
-```
-
-### Update a Workflow
-
-```typescript
-const updated = await client.updateWorkflow("wf_abc123", {
-  name: "Updated Balance Monitor",
-  enabled: false,
-});
-```
-
-### Enable and Disable
-
-```typescript
-await client.enableWorkflow("wf_abc123");
-await client.disableWorkflow("wf_abc123");
-```
-
-### Delete a Workflow
-
-```typescript
-await client.deleteWorkflow("wf_abc123");
+# For live AI chat, also run the agent:
+# cd frontend && pnpm run dev
 ```
 
 ---
 
-## Executions
+## 📖 Documentation
 
-Once a workflow exists, you can trigger it manually and monitor its progress.
+### Developer Docs (Static HTML)
 
-### Trigger a Workflow
-
-```typescript
-const { executionId } = await client.executeWorkflow("wf_abc123");
-console.log("Execution started:", executionId);
+```bash
+python3 -m http.server 8123 --directory docs_frontend
+# → http://localhost:8123
 ```
 
-### Wait for Completion
+9 comprehensive pages covering:
+- Protocol flow diagrams
+- Onboarding (3-step quickstart)
+- Full SDK surface  
+- Workflow graph API
+- Execution polling
+- Direct on-chain operations
+- Chains, integrations, marketplace
+- Troubleshooting & common errors
 
-The `waitForExecution` method polls the execution status until it reaches a terminal state (`success`, `error`, or `cancelled`):
+### Markdown Docs
 
-```typescript
-const result = await client.waitForExecution("wf_abc123", executionId, {
-  timeoutMs: 60000,      // max wait time (default: 5 minutes)
-  pollIntervalMs: 2000,  // poll frequency (default: 2 seconds)
-});
+- [QUICKSTART.md](docs/docs_mdfiles/QUICKSTART.md) — Get running in 5 minutes
+- [API.md](docs/docs_mdfiles/API.md) — SDK module reference
+- [PROTOCOL.md](docs/docs_mdfiles/PROTOCOL.md) — End-to-end flow
+- [ENVIRONMENT.md](docs/docs_mdfiles/ENVIRONMENT.md) — Configuration
 
-console.log(result.status);  // "success" | "error" | "cancelled"
-console.log(result.output);  // workflow output data
+### Agent Guide
+
+[AGENTS.md](AGENTS.md) — Complete guide for autonomous agents or developers modifying the system. Covers architecture, commands, workflows, and gotchas.
+
+---
+
+## 🛠️ Development
+
+### Build All Packages
+
+```bash
+pnpm build              # entire workspace
+pnpm build:sdk          # SDK only
+pnpm build:plugin       # plugin only (SDK must be built first)
 ```
 
-### Get Execution Details
+### Run Tests
 
-```typescript
-const execution = await client.getExecution("wf_abc123", executionId);
-console.log(execution.completedSteps, "/", execution.totalSteps);
+```bash
+pnpm test               # all packages
+pnpm test:sdk           # SDK: 211 tests
+pnpm test:plugin        # Plugin tests
+pnpm type-check         # TypeScript validation
 ```
 
-### List Execution History
+### Development Workflow
 
-```typescript
-const history = await client.listExecutions("wf_abc123", {
-  page: 1,
-  limit: 20,
-});
-```
+1. **Edit SDK** in `SDK/src/`
+2. **Rebuild**: `pnpm build:sdk`
+3. **Restart frontend**: `cd frontend && pnpm run dev`
+4. **Smoke test**:
 
-### Execution Logs (Namespaced API)
-
-For per-node execution logs, use the namespaced `executions` module:
-
-```typescript
-const logs = await client.executions.getLogs(executionId);
-for (const log of logs) {
-  console.log(`${log.nodeName} (${log.nodeType}): ${log.status}`);
-  if (log.error) console.error("  Error:", log.error);
-}
+```bash
+curl -s http://localhost:3000/api/agents/keeper-agent/message \
+  -H 'Content-Type: application/json' \
+  -d '{"text":"List my workflows","userId":"user","roomId":"keeperchat"}'
 ```
 
 ---
 
-## Chains
+## 🧪 Testing
 
-KeeperHub supports multiple EVM-compatible chains. You can query the supported chains programmatically:
-
-```typescript
-const chains = await client.listChains();
-
-for (const chain of chains) {
-  console.log(`${chain.name} (Chain ID: ${chain.chainId})`);
-}
-```
-
-Each chain object includes `id`, `name`, `chainId` (the EVM chain ID), `rpcUrl`, `explorerUrl`, `nativeCurrency`, and whether it is a `testnet`.
-
-### Fetch a Contract ABI
-
-The SDK can fetch and resolve ABIs for verified contracts, including automatic proxy resolution (EIP-1967, EIP-1822):
-
-```typescript
-const abi = await client.chains.getAbi(1, "0xContractAddress");
-```
-
----
-
-## Integrations
-
-Integrations represent stored credentials and connections (wallets, DeFi protocols, notification services). Workflows reference integrations by ID to authenticate with external services.
-
-### List Integrations
-
-```typescript
-const integrations = await client.listIntegrations();
-```
-
-### Create an Integration
-
-```typescript
-const integration = await client.createIntegration({
-  name: "My Safe Wallet",
-  type: "safe",
-  config: {
-    chainId: 1,
-    safeAddress: "0xYourSafeAddress",
-  },
-});
-```
-
-Supported integration types include: `web3`, `safe`, `aave-v3`, `morpho`, `uniswap`, `aerodrome`, `compound-v3`, `cow-swap`, `curve`, `lido`, `pendle`, `discord`, `telegram`, `slack`, `sendgrid`, `webhook`, and more.
-
-### Delete an Integration
-
-```typescript
-await client.deleteIntegration(integration.id);
-```
-
----
-
-## Direct Execution
-
-For one-off on-chain operations that do not need a full workflow, the SDK provides direct execution methods through the namespaced `directExecute` module.
-
-### Token Transfer
-
-```typescript
-const transfer = await client.directExecute.transfer({
-  chainId: 8453, // Base
-  to: "0xRecipientAddress",
-  amount: "1000000", // in smallest token unit
-  tokenAddress: "0xTokenAddress", // omit for native currency
-});
-
-const result = await client.directExecute.waitForCompletion(transfer.id);
-console.log("Transaction hash:", result.transactionHash);
-```
-
-### Smart Contract Call
-
-```typescript
-const call = await client.directExecute.contractCall({
-  chainId: 1,
-  contractAddress: "0xContractAddress",
-  functionName: "approve",
-  abi: [/* ABI array */],
-  args: ["0xSpender", "1000000000000000000"],
-});
-```
-
-### Check-and-Execute
-
-Read a value on-chain, evaluate a condition, and execute a write call only if the condition is met:
-
-```typescript
-const result = await client.directExecute.checkAndExecute({
-  chainId: 1,
-  check: {
-    contractAddress: "0xTokenAddress",
-    functionName: "balanceOf",
-    abi: [/* ABI */],
-    args: ["0xYourAddress"],
-  },
-  condition: {
-    operator: "gt",
-    value: "1000000000000000000", // 1 token
-  },
-  execute: {
-    contractAddress: "0xTokenAddress",
-    functionName: "transfer",
-    abi: [/* ABI */],
-    args: ["0xRecipient", "500000000000000000"],
-  },
-});
-```
-
----
-
-## Listed Workflows (Marketplace)
-
-KeeperHub has a marketplace of publicly listed workflows that you can search and invoke. These are accessed through the namespaced `listedWorkflows` module.
-
-### Search the Marketplace
-
-```typescript
-const listed = await client.listedWorkflows.search({
-  query: "balance monitor",
-  category: "defi",
-  chain: "ethereum",
-});
-```
-
-### Call a Listed Workflow
-
-```typescript
-const result = await client.listedWorkflows.call("balance-check-slug", {
-  address: "0xWalletAddress",
-  chainId: 1,
-});
-
-if ("paymentRequired" in result) {
-  // Workflow requires payment -- result.paymentRequired contains the challenge
-  console.log("Price:", result.paymentRequired.priceUsdcPerCall, "USDC");
-} else {
-  console.log("Result:", result.data);
-}
-```
-
----
-
-## MCP Schema Discovery
-
-The SDK provides access to the complete schema of all available actions, triggers, and chains through the MCP schemas endpoint. This is useful for building dynamic UIs or validating workflow configurations:
-
-```typescript
-const schemas = await client.mcpSchemas.get();
-
-console.log("Available actions:", schemas.actions.length);
-console.log("Available triggers:", schemas.triggers.length);
-console.log("Supported chains:", schemas.chains.length);
-
-// Inspect a specific action's config fields
-const aaveAction = schemas.actions.find((a) => a.pluginId === "aave-v3");
-if (aaveAction) {
-  for (const field of aaveAction.configFields) {
-    console.log(`  ${field.key} (${field.type}): ${field.description}`);
-  }
-}
-```
-
----
-
-## Helper Utilities
-
-The SDK ships with helper functions for building workflow graphs programmatically.
-
-### Node Builders
-
-```typescript
-import {
-  createTriggerNode,
-  createActionNode,
-  createConditionNode,
-} from "keeperkit";
-
-const trigger = createTriggerNode({
-  label: "On New Block",
-  triggerType: "block",
-  config: { chainId: 1 },
-});
-
-const action = createActionNode({
-  label: "Swap Tokens",
-  actionType: "uniswap-swap",
-  pluginId: "uniswap",
-  config: { tokenIn: "WETH", tokenOut: "USDC" },
-});
-
-const condition = createConditionNode({
-  label: "Price Above Threshold",
-  expression: "result.price > 2000",
-});
-```
-
-### Edge Builders
-
-```typescript
-import { createEdge, createConditionEdges } from "keeperkit";
-
-// Simple edge
-const edge = createEdge({ source: trigger.id, target: action.id });
-
-// Condition branches (true path and false path)
-const [trueEdge, falseEdge] = createConditionEdges(
-  condition.id,
-  "action_if_true",
-  "action_if_false",
-);
-```
-
-### Template References
-
-Nodes can reference outputs from previous nodes using template strings. The `templateRef` helper builds these references:
-
-```typescript
-import { templateRef } from "keeperkit";
-
-const ref = templateRef("node_1", "Check Balance", "result.balance");
-// Produces: "{{@node_1:Check Balance.result.balance}}"
-```
-
-You can also parse and extract template references:
-
-```typescript
-import { parseTemplateRef, extractTemplateRefs, hasTemplateRefs } from "keeperkit";
-
-const parsed = parseTemplateRef("{{@node_1:Check Balance.result.balance}}");
-// { nodeId: "node_1", label: "Check Balance", field: "result.balance" }
-
-const allRefs = extractTemplateRefs("Balance is {{@n1:A.x}} and price is {{@n2:B.y}}");
-// Returns an array of ParsedTemplateRef objects
-
-const containsRefs = hasTemplateRefs("some text {{@node:Label.field}}");
-// true
-```
-
-### Workflow Validation
-
-Before submitting a workflow to the API, you can validate its graph structure locally:
-
-```typescript
-import { validateWorkflowGraph, validateNodeConfig } from "keeperkit";
-
-const result = validateWorkflowGraph(nodes, edges);
-if (!result.valid) {
-  for (const error of result.errors) {
-    console.error(`${error.nodeId ?? error.edgeId}: ${error.message}`);
-  }
-}
-
-// Validate required fields on a specific node
-const nodeResult = validateNodeConfig(actionNode, ["chainId", "address"]);
-```
-
-The validator checks for: missing triggers, orphan nodes, self-loops, dangling edge references, and missing condition branch edges.
-
----
-
-## Error Handling
-
-All SDK errors extend `KeeperKitError`, which carries structured information about what went wrong:
-
-```typescript
-import { KeeperKit, KeeperKitError } from "keeperkit";
-
-try {
-  await client.getWorkflow("nonexistent-id");
-} catch (err) {
-  if (err instanceof KeeperKitError) {
-    console.error("Status:", err.status);    // HTTP status code (e.g. 404)
-    console.error("Code:", err.code);        // machine-readable code (e.g. "NOT_FOUND")
-    console.error("Message:", err.message);  // human-readable description
-    console.error("Retryable:", err.isRetryable);
-    console.error("Body:", err.body);        // raw response body
-  }
-}
-```
-
-The SDK maps HTTP responses to specific error subclasses:
-
-| Status | Error Class | Code |
-|:------:|:------------|:-----|
-| 400 | `ValidationError` | `VALIDATION_ERROR` |
-| 401, 403 | `AuthError` | `AUTH_ERROR` |
-| 402 | `PaymentRequiredError` | `PAYMENT_REQUIRED` |
-| 404 | `NotFoundError` | `NOT_FOUND` |
-| 422 | `SpendingCapError` | `SPENDING_CAP_EXCEEDED` |
-| 429 | `RateLimitError` | `RATE_LIMIT_EXCEEDED` |
-| 5xx | `ServerError` | `SERVER_ERROR` |
-| Timeout | `KeeperKitError` | `TIMEOUT` |
-| Network failure | `KeeperKitError` | `NETWORK_ERROR` |
-
-All error subclasses can be imported individually for precise `instanceof` checks.
-
----
-
-## Type Exports
-
-The SDK exports all public types for use in your TypeScript code. Key types include:
-
-```typescript
-import type {
-  // Workflows
-  Workflow,
-  WorkflowDefinition,   // alias for CreateWorkflowInput
-  WorkflowNode,
-  WorkflowEdge,
-  TriggerConfig,
-  ActionConfig,
-  ConditionConfig,
-  CreateWorkflowInput,
-  UpdateWorkflowInput,
-
-  // Executions
-  Execution,            // alias for WorkflowExecution
-  WorkflowExecution,
-  NodeResult,           // alias for ExecutionLog
-  ExecutionLog,
-  ExecutionProgress,
-
-  // Direct Execution
-  DirectExecution,
-  TransferInput,
-  ContractCallInput,
-  CheckAndExecuteInput,
-
-  // Integrations
-  Integration,
-  CreateIntegrationInput,
-
-  // Chains and Schemas
-  Chain,
-  McpSchemaResponse,
-  McpSchemaAction,
-  McpSchemaTrigger,
-
-  // Pagination
-  PaginatedResponse,
-} from "keeperkit";
-```
-
----
-
-## API Styles
-
-The SDK offers two API styles. You can use whichever fits your preference:
-
-### Flat API (recommended for most use cases)
-
-```typescript
-import { KeeperKit } from "keeperkit";
-
-const client = new KeeperKit({ apiKey: "kh_..." });
-const workflows = await client.listWorkflows();
-const { executionId } = await client.executeWorkflow(workflows[0].id);
-```
-
-### Namespaced API (full access to all methods)
-
-```typescript
-import { createKeeperHubClient } from "keeperkit";
-
-const client = createKeeperHubClient({ apiKey: "kh_..." });
-const workflows = await client.workflows.list({ projectId: "proj_1" });
-const logs = await client.executions.getLogs("exec_123");
-const abi = await client.chains.getAbi(1, "0xContractAddress");
-```
-
-The flat API on `KeeperKit` covers the most common operations. The namespaced modules (accessible as `client.workflows`, `client.executions`, `client.directExecute`, etc.) expose additional methods like `workflows.duplicate()`, `workflows.goLive()`, `executions.cancel()`, `integrations.test()`, and more.
-
----
-
-## Development Setup
-
-### Running Tests
-
-The SDK has 211 tests across 20 test files covering the client, modules, helpers, models, and integration scenarios:
+### SDK Tests (211 tests, 20 files)
 
 ```bash
 cd SDK
 pnpm test
 ```
 
-### Type Checking
+Coverage includes:
+- HTTP client, retries, error mapping
+- Auth & token handling
+- Each API module
+- Helper functions
+- TypeScript types
+
+### Plugin Tests
 
 ```bash
-pnpm type-check
-```
-
-### Building
-
-```bash
-pnpm build
-```
-
-The build produces CommonJS (`dist/index.js`), ESM (`dist/index.mjs`), and TypeScript declarations (`dist/index.d.ts`).
-
----
-
-## Support & Resources
-
-- **Documentation**: [docs.keeperhub.com](https://docs.keeperhub.com)
-- **Dashboard**: [app.keeperhub.com](https://app.keeperhub.com)
-- **Issues**: [GitHub Issues](https://github.com/KeeperHub/KeeperKit/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/KeeperHub/KeeperKit/discussions)
-
----
-
-## Contributing
-
-We welcome contributions! Please read our [contributing guidelines](./CONTRIBUTING.md) before submitting PRs.
-
-### Development Workflow
-
-```bash
-# Clone and install
-git clone https://github.com/KeeperHub/KeeperKit.git
-cd KeeperKit
-pnpm install
-
-# Build both packages
-pnpm build
-
-# Run all tests
+cd plugin-elizaos
 pnpm test
+```
 
-# Type-check everything
-pnpm type-check
+Coverage includes:
+- Action evaluation & execution
+- Service initialization
+- Provider context injection
+- x402 payment flow
+
+---
+
+## 🔑 Key Implementation Details
+
+### Execution Status 404 Handling
+
+KeeperHub's API sometimes takes a few seconds to index execution records. The SDK handles this gracefully:
+
+```typescript
+// Automatically retries on 404 for a short window
+const status = await client.executions.getStatus(executionId);
+// If still missing, returns "accepted/running" state
+```
+
+### Typed Errors
+
+Every HTTP error maps to a semantic TypeScript type:
+
+```typescript
+try {
+  await client.workflows.get("wf_missing");
+} catch (error) {
+  if (error instanceof NotFoundError) { /* 404 */ }
+  if (error instanceof AuthError) { /* 401/403 */ }
+  if (error instanceof RateLimitError) { /* 429 */ }
+  if (error instanceof PaymentRequiredError) { /* 402 */ }
+}
+```
+
+### Pagination
+
+All list operations support pagination:
+
+```typescript
+const page1 = await client.workflows.list({ page: 1, limit: 20 });
+const page2 = await client.workflows.list({ page: 2, limit: 20 });
+```
+
+### Configurable Retries
+
+```typescript
+const client = new KeeperKit({
+  apiKey: "kh_...",
+  retry: {
+    maxAttempts: 5,
+    baseDelayMs: 1000,
+    maxDelayMs: 30000,
+    retryWrites: false,  // set true for POST/PATCH/DELETE
+  },
+});
 ```
 
 ---
 
-## License
+## 📦 Packages
 
-MIT License. See [LICENSE](./LICENSE) for details.
+| Package | Version | NPM |
+|---------|---------|-----|
+| `keeperkit` | 0.1.2 | [@npm](https://www.npmjs.com/package/keeperkit) |
+| `@keeperhub/plugin-keeperkit` | 0.1.0 | [@npm](https://www.npmjs.com/package/@keeperhub/plugin-keeperkit) |
+
+All packages exported as ESM + CJS with full TypeScript definitions.
 
 ---
 
-## Authors
+## 🎯 Getting Started Checklist
 
-**KeeperKit** is developed and maintained by [Aradhya Agrawal](https://github.com/PhAnToMxSD) and the KeeperHub community.
+- [ ] Clone: `git clone https://github.com/PhAnToMxSD/KeeperKit.git`
+- [ ] Install: `pnpm install`
+- [ ] Configure: Create `frontend/.env` with API keys
+- [ ] Build: `pnpm build:sdk`
+- [ ] Run: `cd frontend && pnpm run dev`
+- [ ] Test: Visit `http://localhost:3000`
+- [ ] Read: [PROTOCOL.md](docs/docs_mdfiles/PROTOCOL.md) for internals
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Areas to explore:
+
+- **New API modules** — Extend `SDK/src/modules/`
+- **Plugin actions** — Add handlers in `plugin-elizaos/src/actions/`
+- **Consumer apps** — Build new applications on KeeperKit
+- **Documentation** — Improve guides and tutorials
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for details.
+
+---
+
+## 👥 Credits
+
+Built with ❤️ for **ETHGlobal Hackathon** by **PhAnToMxSD** and the community.
+
+**KeeperHub API Reference:** [docs.keeperhub.com](https://docs.keeperhub.com)  
+**ElizaOS Framework:** [elizaos.ai](https://elizaos.ai)
+
+---
+
+**Last Updated:** May 2026  
+**Status:** Production Ready ✅
